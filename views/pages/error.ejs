@@ -1,0 +1,13 @@
+<%- include('../partials/header') %>
+
+<div class="error-page">
+  <div class="error-content">
+    <div class="error-code">Oops!</div>
+    <h1><%= typeof title !== 'undefined' ? title : 'Something Went Wrong' %></h1>
+    <p><%= typeof message !== 'undefined' ? message : 'An unexpected error occurred. Please try again later.' %></p>
+    <a href="/" class="btn btn-primary btn-lg">Back to Home</a>
+    <a href="/shop" class="btn btn-secondary btn-lg" style="margin-left: 0.75rem;">Browse Shop</a>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

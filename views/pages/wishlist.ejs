@@ -1,0 +1,65 @@
+<%- include('../partials/header') %>
+
+<div class="wishlist-page">
+  <div class="container">
+    <h1><i class="fas fa-heart" style="color: var(--color-error);"></i> My Wishlist</h1>
+
+    <% if (items && items.length > 0) { %>
+      <div class="wishlist-grid">
+        <% items.forEach(function(item) { %>
+          <div class="product-card">
+            <div class="product-card-image">
+              <a href="/shop/<%= item.slug %>">
+                <img src="<%= item.image %>" alt="<%= item.name %>">
+              </a>
+              <% if (item.category_name) { %>
+                <span class="product-badge"><%= item.category_name %></span>
+              <% } %>
+              <form method="POST" action="/wishlist/remove" style="position: absolute; top: 0.75rem; right: 0.75rem; z-index: 2;">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="hidden" name="product_id" value="<%= item.product_id %>">
+                <button type="submit" class="wishlist-btn active" aria-label="Remove from wishlist">
+                  <i class="fas fa-heart"></i>
+                </button>
+              </form>
+              <div class="product-card-overlay">
+                <form class="add-to-cart-form" method="POST" action="/cart/add">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                  <input type="hidden" name="product_id" value="<%= item.product_id %>">
+                  <input type="hidden" name="quantity" value="1">
+                  <button type="submit" class="quick-add-btn"><i class="fas fa-shopping-bag"></i> Move to Cart</button>
+                </form>
+              </div>
+            </div>
+            <div class="product-card-body">
+              <% if (item.category_name) { %>
+                <div class="product-card-category"><%= item.category_name %></div>
+              <% } %>
+              <h3 class="product-card-name"><a href="/shop/<%= item.slug %>"><%= item.name %></a></h3>
+              <div class="product-card-price">
+                <span class="price-current">₹<%= item.price.toLocaleString('en-IN') %></span>
+                <% if (item.original_price) { %>
+                  <span class="price-original">₹<%= item.original_price.toLocaleString('en-IN') %></span>
+                <% } %>
+              </div>
+              <% if (item.stock > 0) { %>
+                <span class="stock-status in-stock" style="font-size: 0.8rem;"><span class="stock-dot"></span> In Stock</span>
+              <% } else { %>
+                <span class="stock-status out-of-stock" style="font-size: 0.8rem;"><span class="stock-dot"></span> Out of Stock</span>
+              <% } %>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    <% } else { %>
+      <div class="wishlist-empty">
+        <i class="far fa-heart"></i>
+        <h2>Your Wishlist is Empty</h2>
+        <p>Start adding jewelry pieces you love to your wishlist and they'll show up here.</p>
+        <a href="/shop" class="btn btn-primary btn-lg">Explore Collection</a>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

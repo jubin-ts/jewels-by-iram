@@ -1,0 +1,72 @@
+<%- include('../partials/header') %>
+
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-header">
+      <h3>Admin Panel</h3>
+      <p>Jewels by Iram</p>
+    </div>
+    <nav class="admin-nav">
+      <a href="/admin"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      <a href="/admin/products"><i class="fas fa-gem"></i> Products</a>
+      <a href="/admin/orders" class="active"><i class="fas fa-shopping-bag"></i> Orders</a>
+      <a href="/admin/messages"><i class="fas fa-envelope"></i> Messages</a>
+      <a href="/"><i class="fas fa-store"></i> View Store</a>
+    </nav>
+  </aside>
+
+  <!-- Content -->
+  <div class="admin-content">
+    <div class="admin-header">
+      <h1>Orders</h1>
+    </div>
+
+    <div class="admin-table-card">
+      <div class="admin-table-header">
+        <h2>All Orders (<%= orders.length %>)</h2>
+      </div>
+      <% if (orders && orders.length > 0) { %>
+        <div class="admin-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Order #</th>
+                <th>Customer</th>
+                <th>Email</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Payment</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% orders.forEach(function(order) { %>
+                <tr>
+                  <td><strong><%= order.order_number %></strong></td>
+                  <td><%= order.customer_name %></td>
+                  <td><%= order.customer_email %></td>
+                  <td><%= new Date(order.created_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' }) %></td>
+                  <td>₹<%= order.total.toLocaleString('en-IN') %></td>
+                  <td><%= order.payment_method === 'cod' ? 'COD' : 'WhatsApp' %></td>
+                  <td><span class="status-badge <%= order.status %>"><%= order.status %></span></td>
+                  <td>
+                    <a href="/admin/orders/<%= order.id %>" class="btn btn-sm btn-secondary"><i class="fas fa-eye"></i> View</a>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <div style="text-align: center; padding: 3rem; color: var(--color-text-muted);">
+          <i class="fas fa-shopping-bag" style="font-size: 2.5rem; margin-bottom: 1rem; display: block;"></i>
+          <p>No orders yet.</p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

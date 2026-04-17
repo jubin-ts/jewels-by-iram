@@ -1,0 +1,119 @@
+<%- include('../partials/header') %>
+
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-header">
+      <h3>Admin Panel</h3>
+      <p>Jewels by Iram</p>
+    </div>
+    <nav class="admin-nav">
+      <a href="/admin"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      <a href="/admin/products" class="active"><i class="fas fa-gem"></i> Products</a>
+      <a href="/admin/orders"><i class="fas fa-shopping-bag"></i> Orders</a>
+      <a href="/admin/messages"><i class="fas fa-envelope"></i> Messages</a>
+      <a href="/"><i class="fas fa-store"></i> View Store</a>
+    </nav>
+  </aside>
+
+  <!-- Content -->
+  <div class="admin-content">
+    <div class="admin-header">
+      <h1><%= product ? 'Edit Product' : 'Add New Product' %></h1>
+      <a href="/admin/products" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Products</a>
+    </div>
+
+    <div class="admin-form-card">
+      <h2><%= product ? 'Update Product Details' : 'Product Information' %></h2>
+
+      <form method="POST" action="<%= product ? '/admin/products/' + product.id : '/admin/products' %>">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <div class="form-group">
+          <label for="name">Product Name <span class="required">*</span></label>
+          <input type="text" id="name" name="name" class="form-control" value="<%= product ? product.name : '' %>" required placeholder="Enter product name">
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" name="description" class="form-control" rows="4" placeholder="Enter product description"><%= product ? product.description || '' : '' %></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="price">Price (₹) <span class="required">*</span></label>
+            <input type="number" id="price" name="price" class="form-control" value="<%= product ? product.price : '' %>" required step="0.01" min="0" placeholder="0.00">
+          </div>
+          <div class="form-group">
+            <label for="original_price">Original Price (₹)</label>
+            <input type="number" id="original_price" name="original_price" class="form-control" value="<%= product && product.original_price ? product.original_price : '' %>" step="0.01" min="0" placeholder="0.00">
+            <span class="form-hint">Leave empty if no discount</span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="category_id">Category <span class="required">*</span></label>
+            <select id="category_id" name="category_id" class="form-control" required>
+              <option value="">Select a category</option>
+              <% categories.forEach(function(cat) { %>
+                <option value="<%= cat.id %>" <%= product && product.category_id == cat.id ? 'selected' : '' %>><%= cat.name %></option>
+              <% }); %>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="stock">Stock Quantity</label>
+            <input type="number" id="stock" name="stock" class="form-control" value="<%= product ? product.stock : 10 %>" min="0" placeholder="10">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="image">Image Path <span class="required">*</span></label>
+          <input type="text" id="image" name="image" class="form-control" value="<%= product ? product.image : '' %>" required placeholder="/images/products/your-image.jpeg">
+          <span class="form-hint">Path relative to public folder, e.g., /images/products/ring-gold-1.jpeg</span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="material">Material</label>
+            <input type="text" id="material" name="material" class="form-control" value="<%= product ? product.material || '' : '' %>" placeholder="e.g., Gold, Silver, Diamond">
+          </div>
+          <div class="form-group">
+            <label for="weight">Weight</label>
+            <input type="text" id="weight" name="weight" class="form-control" value="<%= product ? product.weight || '' : '' %>" placeholder="e.g., 15g, 2.5 carats">
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 2rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+          <div class="form-check">
+            <input type="checkbox" id="featured" name="featured" value="1" <%= product && product.featured ? 'checked' : '' %>>
+            <label for="featured">Featured Product</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" id="new_arrival" name="new_arrival" value="1" <%= product && product.new_arrival ? 'checked' : '' %>>
+            <label for="new_arrival">New Arrival</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" id="best_seller" name="best_seller" value="1" <%= product && product.best_seller ? 'checked' : '' %>>
+            <label for="best_seller">Best Seller</label>
+          </div>
+          <% if (product) { %>
+            <div class="form-check">
+              <input type="checkbox" id="active" name="active" value="1" <%= product.active ? 'checked' : '' %>>
+              <label for="active">Active (Visible in store)</label>
+            </div>
+          <% } %>
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> <%= product ? 'Update Product' : 'Create Product' %>
+          </button>
+          <a href="/admin/products" class="btn btn-secondary">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

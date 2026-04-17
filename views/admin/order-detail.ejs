@@ -1,0 +1,143 @@
+<%- include('../partials/header') %>
+
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-header">
+      <h3>Admin Panel</h3>
+      <p>Jewels by Iram</p>
+    </div>
+    <nav class="admin-nav">
+      <a href="/admin"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      <a href="/admin/products"><i class="fas fa-gem"></i> Products</a>
+      <a href="/admin/orders" class="active"><i class="fas fa-shopping-bag"></i> Orders</a>
+      <a href="/admin/messages"><i class="fas fa-envelope"></i> Messages</a>
+      <a href="/"><i class="fas fa-store"></i> View Store</a>
+    </nav>
+  </aside>
+
+  <!-- Content -->
+  <div class="admin-content">
+    <div class="admin-header">
+      <h1>Order: <%= order.order_number %></h1>
+      <a href="/admin/orders" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Orders</a>
+    </div>
+
+    <!-- Order Info -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+      <div class="order-details-card">
+        <h3>Order Information</h3>
+        <div class="order-info-grid">
+          <div class="order-info-item">
+            <span class="order-info-label">Order Number</span>
+            <span class="order-info-value"><%= order.order_number %></span>
+          </div>
+          <div class="order-info-item">
+            <span class="order-info-label">Date</span>
+            <span class="order-info-value"><%= new Date(order.created_at).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+          </div>
+          <div class="order-info-item">
+            <span class="order-info-label">Payment Method</span>
+            <span class="order-info-value"><%= order.payment_method === 'cod' ? 'Cash on Delivery' : 'WhatsApp Order' %></span>
+          </div>
+          <div class="order-info-item">
+            <span class="order-info-label">Total</span>
+            <span class="order-info-value" style="font-size: 1.1rem; font-weight: 700;">₹<%= order.total.toLocaleString('en-IN') %></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="order-details-card">
+        <h3>Customer Information</h3>
+        <div class="order-info-grid">
+          <div class="order-info-item">
+            <span class="order-info-label">Name</span>
+            <span class="order-info-value"><%= order.customer_name %></span>
+          </div>
+          <div class="order-info-item">
+            <span class="order-info-label">Email</span>
+            <span class="order-info-value"><%= order.customer_email %></span>
+          </div>
+          <div class="order-info-item">
+            <span class="order-info-label">Phone</span>
+            <span class="order-info-value"><%= order.customer_phone %></span>
+          </div>
+          <div class="order-info-item">
+            <span class="order-info-label">Address</span>
+            <span class="order-info-value">
+              <%= order.shipping_address %>
+              <% if (order.city) { %>, <%= order.city %><% } %>
+              <% if (order.pincode) { %> - <%= order.pincode %><% } %>
+            </span>
+          </div>
+        </div>
+        <% if (order.notes) { %>
+          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--color-border-light);">
+            <span class="order-info-label">Order Notes</span>
+            <p style="margin-top: 0.25rem; color: var(--color-text-light);"><%= order.notes %></p>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Update Status -->
+    <div class="admin-form-card" style="margin-bottom: 1.5rem; max-width: 100%;">
+      <h2>Update Order Status</h2>
+      <form method="POST" action="/admin/orders/<%= order.id %>/status" style="display: flex; gap: 1rem; align-items: flex-end;">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div class="form-group" style="flex: 1; margin-bottom: 0;">
+          <label for="status">Current Status</label>
+          <select id="status" name="status" class="form-control">
+            <option value="pending" <%= order.status === 'pending' ? 'selected' : '' %>>Pending</option>
+            <option value="confirmed" <%= order.status === 'confirmed' ? 'selected' : '' %>>Confirmed</option>
+            <option value="processing" <%= order.status === 'processing' ? 'selected' : '' %>>Processing</option>
+            <option value="shipped" <%= order.status === 'shipped' ? 'selected' : '' %>>Shipped</option>
+            <option value="delivered" <%= order.status === 'delivered' ? 'selected' : '' %>>Delivered</option>
+            <option value="cancelled" <%= order.status === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Update Status</button>
+      </form>
+    </div>
+
+    <!-- Order Items -->
+    <div class="admin-table-card">
+      <div class="admin-table-header">
+        <h2>Order Items</h2>
+      </div>
+      <div class="admin-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% items.forEach(function(item) { %>
+              <tr>
+                <td>
+                  <div class="cart-item-info">
+                    <% if (item.product_image) { %>
+                      <div class="product-thumb">
+                        <img src="<%= item.product_image %>" alt="<%= item.product_name %>">
+                      </div>
+                    <% } %>
+                    <strong><%= item.product_name %></strong>
+                  </div>
+                </td>
+                <td>₹<%= item.price.toLocaleString('en-IN') %></td>
+                <td><%= item.quantity %></td>
+                <td><strong>₹<%= (item.price * item.quantity).toLocaleString('en-IN') %></strong></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,54 @@
+<%- include('../partials/header') %>
+
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-header">
+      <h3>Admin Panel</h3>
+      <p>Jewels by Iram</p>
+    </div>
+    <nav class="admin-nav">
+      <a href="/admin"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      <a href="/admin/products"><i class="fas fa-gem"></i> Products</a>
+      <a href="/admin/orders"><i class="fas fa-shopping-bag"></i> Orders</a>
+      <a href="/admin/messages" class="active"><i class="fas fa-envelope"></i> Messages</a>
+      <a href="/"><i class="fas fa-store"></i> View Store</a>
+    </nav>
+  </aside>
+
+  <!-- Content -->
+  <div class="admin-content">
+    <div class="admin-header">
+      <h1>Messages</h1>
+    </div>
+
+    <% if (messages && messages.length > 0) { %>
+      <% messages.forEach(function(msg) { %>
+        <div class="message-card <%= !msg.read ? 'unread' : '' %>">
+          <div class="message-card-header">
+            <strong><%= msg.name %></strong>
+            <span><%= new Date(msg.created_at).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) %></span>
+          </div>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.5rem; font-size: 0.85rem; color: var(--color-text-muted);">
+            <span><i class="fas fa-envelope"></i> <%= msg.email %></span>
+            <% if (msg.phone) { %>
+              <span><i class="fas fa-phone"></i> <%= msg.phone %></span>
+            <% } %>
+            <% if (msg.subject) { %>
+              <span><i class="fas fa-tag"></i> <%= msg.subject %></span>
+            <% } %>
+          </div>
+          <p><%= msg.message %></p>
+        </div>
+      <% }); %>
+    <% } else { %>
+      <div style="text-align: center; padding: 4rem 2rem; color: var(--color-text-muted);">
+        <i class="fas fa-envelope-open" style="font-size: 3rem; margin-bottom: 1rem; display: block;"></i>
+        <h3 style="margin-bottom: 0.5rem;">No Messages Yet</h3>
+        <p>Messages from the contact form will appear here.</p>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

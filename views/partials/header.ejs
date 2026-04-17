@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="<%= csrfToken %>">
+  <title><%= typeof title !== 'undefined' ? title : 'Jewels by Iram' %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegevlber/GBFLp1Lyn3+3cKMaG0aA+tVYRkOyA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="icon" href="/images/logo.jpeg" type="image/jpeg">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <a href="/" class="logo">
+        <img src="/images/logo.jpeg" alt="Jewels by Iram">
+        <span class="logo-text">Jewels by <span>Iram</span></span>
+      </a>
+
+      <nav class="main-nav">
+        <div class="nav-links">
+          <a href="/">Home</a>
+          <a href="/shop">Shop</a>
+          <a href="/about">About</a>
+          <a href="/contact">Contact</a>
+        </div>
+      </nav>
+
+      <div class="header-actions">
+        <!-- Search -->
+        <div class="search-bar">
+          <input type="text" class="search-input" placeholder="Search jewelry..." aria-label="Search">
+          <button type="button" class="search-toggle" aria-label="Toggle search">
+            <i class="fas fa-search"></i>
+          </button>
+          <div class="search-results-dropdown"></div>
+        </div>
+
+        <% if (user) { %>
+          <a href="/wishlist" class="header-icon" data-tooltip="Wishlist" aria-label="Wishlist">
+            <i class="far fa-heart"></i>
+          </a>
+        <% } %>
+
+        <!-- Cart -->
+        <a href="/cart" class="cart-link" data-tooltip="Cart" aria-label="Cart">
+          <i class="fas fa-shopping-bag"></i>
+          <% if (cartCount > 0) { %>
+            <span class="cart-badge"><%= cartCount %></span>
+          <% } %>
+        </a>
+
+        <!-- User Menu -->
+        <div class="user-menu">
+          <button class="user-menu-trigger" aria-label="User menu">
+            <i class="far fa-user"></i>
+          </button>
+          <div class="user-dropdown">
+            <% if (user) { %>
+              <a href="/profile"><i class="far fa-user"></i> My Profile</a>
+              <a href="/wishlist"><i class="far fa-heart"></i> Wishlist</a>
+              <% if (user.role === 'admin') { %>
+                <a href="/admin"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+              <% } %>
+              <hr>
+              <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            <% } else { %>
+              <a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a>
+              <a href="/register"><i class="fas fa-user-plus"></i> Register</a>
+            <% } %>
+          </div>
+        </div>
+
+        <!-- Hamburger -->
+        <button class="hamburger" aria-label="Menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Nav -->
+  <nav class="mobile-nav">
+    <div class="mobile-search">
+      <input type="text" class="search-input" placeholder="Search jewelry..." aria-label="Search">
+    </div>
+    <a href="/">Home</a>
+    <a href="/shop">Shop</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+    <% if (user) { %>
+      <a href="/profile">My Profile</a>
+      <a href="/wishlist">Wishlist</a>
+      <a href="/cart">Cart (<%= cartCount %>)</a>
+      <% if (user.role === 'admin') { %>
+        <a href="/admin">Admin Dashboard</a>
+      <% } %>
+      <a href="/logout">Logout</a>
+    <% } else { %>
+      <a href="/login">Login</a>
+      <a href="/register">Register</a>
+    <% } %>
+  </nav>
+
+  <div class="overlay"></div>
+
+  <!-- Flash Messages -->
+  <% if (success && success.length > 0) { %>
+    <div class="flash-messages">
+      <% success.forEach(function(msg) { %>
+        <div class="flash-message flash-success">
+          <i class="fas fa-check-circle"></i>
+          <span><%= msg %></span>
+          <button class="close-flash" aria-label="Close">&times;</button>
+        </div>
+      <% }); %>
+    </div>
+  <% } %>
+  <% if (error && error.length > 0) { %>
+    <div class="flash-messages">
+      <% error.forEach(function(msg) { %>
+        <div class="flash-message flash-error">
+          <i class="fas fa-exclamation-circle"></i>
+          <span><%= msg %></span>
+          <button class="close-flash" aria-label="Close">&times;</button>
+        </div>
+      <% }); %>
+    </div>
+  <% } %>
+
+  <main>

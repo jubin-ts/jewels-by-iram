@@ -1,0 +1,117 @@
+<%- include('../partials/header') %>
+
+<!-- Page Header -->
+<div class="page-header">
+  <div class="container">
+    <h1>Checkout</h1>
+    <nav class="breadcrumbs">
+      <a href="/">Home</a>
+      <span class="separator"><i class="fas fa-chevron-right"></i></span>
+      <a href="/cart">Cart</a>
+      <span class="separator"><i class="fas fa-chevron-right"></i></span>
+      <span class="current">Checkout</span>
+    </nav>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <form method="POST" action="/cart/checkout" class="checkout-layout">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <!-- Shipping Form -->
+      <div class="checkout-form">
+        <h2><i class="fas fa-shipping-fast"></i> Shipping Information</h2>
+
+        <div class="checkout-section">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="customer_name">Full Name <span class="required">*</span></label>
+              <input type="text" id="customer_name" name="customer_name" class="form-control" value="<%= userProfile ? userProfile.name : '' %>" required placeholder="Enter your full name">
+            </div>
+            <div class="form-group">
+              <label for="customer_email">Email Address <span class="required">*</span></label>
+              <input type="email" id="customer_email" name="customer_email" class="form-control" value="<%= userProfile ? userProfile.email : '' %>" required placeholder="Enter your email">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="customer_phone">Phone Number <span class="required">*</span></label>
+            <input type="tel" id="customer_phone" name="customer_phone" class="form-control" value="<%= userProfile && userProfile.phone ? userProfile.phone : '' %>" required placeholder="Enter your phone number">
+          </div>
+
+          <div class="form-group">
+            <label for="shipping_address">Shipping Address <span class="required">*</span></label>
+            <textarea id="shipping_address" name="shipping_address" class="form-control" rows="3" required placeholder="Enter your full address"><%= userProfile && userProfile.address ? userProfile.address : '' %></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="city">City</label>
+              <input type="text" id="city" name="city" class="form-control" value="<%= userProfile && userProfile.city ? userProfile.city : '' %>" placeholder="City">
+            </div>
+            <div class="form-group">
+              <label for="pincode">PIN Code</label>
+              <input type="text" id="pincode" name="pincode" class="form-control" value="<%= userProfile && userProfile.pincode ? userProfile.pincode : '' %>" placeholder="PIN Code">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="notes">Order Notes (Optional)</label>
+            <textarea id="notes" name="notes" class="form-control" rows="2" placeholder="Special instructions for your order"></textarea>
+          </div>
+        </div>
+
+        <div class="checkout-section">
+          <h3><i class="fas fa-credit-card"></i> Payment Method</h3>
+          <div class="form-check">
+            <input type="radio" id="payment-cod" name="payment_method" value="cod" checked>
+            <label for="payment-cod">Cash on Delivery (COD)</label>
+          </div>
+          <div class="form-check">
+            <input type="radio" id="payment-whatsapp" name="payment_method" value="whatsapp">
+            <label for="payment-whatsapp"><i class="fab fa-whatsapp" style="color: #25D366;"></i> WhatsApp Order</label>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg btn-block">
+          <i class="fas fa-lock"></i> Place Order
+        </button>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="order-summary">
+        <h3>Order Summary</h3>
+        <% items.forEach(function(item) { %>
+          <div class="order-summary-item">
+            <div class="order-summary-item-image">
+              <img src="<%= item.image %>" alt="<%= item.name %>">
+            </div>
+            <div class="order-summary-item-info">
+              <div class="order-summary-item-name"><%= item.name %></div>
+              <div class="order-summary-item-qty">Qty: <%= item.quantity %></div>
+            </div>
+            <div class="order-summary-item-price">₹<%= (item.price * item.quantity).toLocaleString('en-IN') %></div>
+          </div>
+        <% }); %>
+
+        <div class="order-summary-totals">
+          <div class="cart-summary-row">
+            <span>Subtotal</span>
+            <span>₹<%= total.toLocaleString('en-IN') %></span>
+          </div>
+          <div class="cart-summary-row">
+            <span>Shipping</span>
+            <span style="color: var(--color-success); font-weight: 600;">Free</span>
+          </div>
+          <div class="cart-summary-row total">
+            <span>Total</span>
+            <span>₹<%= total.toLocaleString('en-IN') %></span>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

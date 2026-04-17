@@ -1,0 +1,132 @@
+<%- include('../partials/header') %>
+
+<!-- Page Header -->
+<div class="page-header">
+  <div class="container">
+    <h1>My Profile</h1>
+    <nav class="breadcrumbs">
+      <a href="/">Home</a>
+      <span class="separator"><i class="fas fa-chevron-right"></i></span>
+      <span class="current">Profile</span>
+    </nav>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="profile-layout">
+      <!-- Profile Info -->
+      <div class="profile-card">
+        <h2><i class="fas fa-user"></i> Personal Information</h2>
+        <form method="POST" action="/profile">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+          <div class="form-group">
+            <label for="name">Full Name <span class="required">*</span></label>
+            <input type="text" id="name" name="name" class="form-control" value="<%= profile.name %>" required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" class="form-control" value="<%= profile.email %>" disabled>
+            <span class="form-hint">Email cannot be changed</span>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" class="form-control" value="<%= profile.phone || '' %>" placeholder="Enter phone number">
+          </div>
+
+          <div class="form-group">
+            <label for="address">Address</label>
+            <textarea id="address" name="address" class="form-control" rows="3" placeholder="Enter your address"><%= profile.address || '' %></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="city">City</label>
+              <input type="text" id="city" name="city" class="form-control" value="<%= profile.city || '' %>" placeholder="City">
+            </div>
+            <div class="form-group">
+              <label for="pincode">PIN Code</label>
+              <input type="text" id="pincode" name="pincode" class="form-control" value="<%= profile.pincode || '' %>" placeholder="PIN Code">
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Update Profile
+          </button>
+        </form>
+      </div>
+
+      <!-- Account Summary -->
+      <div class="profile-card">
+        <h2><i class="fas fa-shield-alt"></i> Account</h2>
+        <div style="margin-bottom: 1.5rem;">
+          <div class="product-meta-item">
+            <strong>Name:</strong>
+            <span><%= profile.name %></span>
+          </div>
+          <div class="product-meta-item">
+            <strong>Email:</strong>
+            <span><%= profile.email %></span>
+          </div>
+          <div class="product-meta-item">
+            <strong>Role:</strong>
+            <span class="status-badge confirmed"><%= profile.role %></span>
+          </div>
+          <div class="product-meta-item">
+            <strong>Joined:</strong>
+            <span><%= new Date(profile.created_at).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <a href="/wishlist" class="btn btn-secondary btn-block"><i class="fas fa-heart"></i> My Wishlist</a>
+          <a href="/logout" class="btn btn-dark btn-block"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+      </div>
+
+      <!-- Order History -->
+      <div class="order-history">
+        <div class="orders-table">
+          <div class="admin-table-header">
+            <h2><i class="fas fa-shopping-bag"></i> Order History</h2>
+          </div>
+          <% if (orders && orders.length > 0) { %>
+            <div class="admin-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Order #</th>
+                    <th>Date</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% orders.forEach(function(order) { %>
+                    <tr>
+                      <td><strong><%= order.order_number %></strong></td>
+                      <td><%= new Date(order.created_at).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }) %></td>
+                      <td>₹<%= order.total.toLocaleString('en-IN') %></td>
+                      <td><span class="status-badge <%= order.status %>"><%= order.status %></span></td>
+                      <td><a href="/orders/<%= order.order_number %>" class="btn btn-sm btn-secondary">View</a></td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+          <% } else { %>
+            <div style="text-align: center; padding: 3rem 2rem; color: var(--color-text-muted);">
+              <i class="fas fa-shopping-bag" style="font-size: 2.5rem; margin-bottom: 1rem; display: block;"></i>
+              <p>No orders yet. <a href="/shop" style="color: var(--color-primary); font-weight: 600;">Start shopping!</a></p>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

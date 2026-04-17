@@ -1,0 +1,111 @@
+<%- include('../partials/header') %>
+
+<!-- Page Header -->
+<div class="page-header">
+  <div class="container">
+    <h1>Contact Us</h1>
+    <p>We'd love to hear from you</p>
+    <nav class="breadcrumbs">
+      <a href="/">Home</a>
+      <span class="separator"><i class="fas fa-chevron-right"></i></span>
+      <span class="current">Contact</span>
+    </nav>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="contact-layout">
+      <!-- Contact Form -->
+      <div class="contact-form-card">
+        <h2>Send Us a Message</h2>
+        <p>Fill out the form below and we'll get back to you as soon as possible.</p>
+
+        <form method="POST" action="/contact">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Your Name <span class="required">*</span></label>
+              <input type="text" id="name" name="name" class="form-control" required placeholder="Enter your name">
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address <span class="required">*</span></label>
+              <input type="email" id="email" name="email" class="form-control" required placeholder="Enter your email">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone" class="form-control" placeholder="Enter your phone number">
+            </div>
+            <div class="form-group">
+              <label for="subject">Subject</label>
+              <input type="text" id="subject" name="subject" class="form-control" placeholder="What is this about?">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message <span class="required">*</span></label>
+            <textarea id="message" name="message" class="form-control" rows="5" required placeholder="Write your message here..."></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg">
+            <i class="fas fa-paper-plane"></i> Send Message
+          </button>
+        </form>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="contact-info">
+        <div class="contact-info-card">
+          <div class="contact-info-icon">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <div class="contact-info-text">
+            <h4>Our Address</h4>
+            <p>Mumbai, Maharashtra<br>India</p>
+          </div>
+        </div>
+
+        <div class="contact-info-card">
+          <div class="contact-info-icon">
+            <i class="fas fa-phone-alt"></i>
+          </div>
+          <div class="contact-info-text">
+            <h4>Phone</h4>
+            <p><a href="tel:+919876543210">+91 98765 43210</a></p>
+          </div>
+        </div>
+
+        <div class="contact-info-card">
+          <div class="contact-info-icon">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <div class="contact-info-text">
+            <h4>Email</h4>
+            <p><a href="mailto:hello@jewelsbyiram.com">hello@jewelsbyiram.com</a></p>
+          </div>
+        </div>
+
+        <div class="contact-info-card">
+          <div class="contact-info-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="contact-info-text">
+            <h4>Business Hours</h4>
+            <p>Monday - Saturday: 10AM - 7PM<br>Sunday: Closed</p>
+          </div>
+        </div>
+
+        <!-- WhatsApp Contact -->
+        <a href="https://wa.me/<%= whatsappNumber %>?text=Hi!%20I%20have%20a%20question%20about%20your%20jewelry." target="_blank" rel="noopener" class="btn btn-success btn-block btn-lg" style="margin-top: 0.5rem;">
+          <i class="fab fa-whatsapp"></i> Chat on WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>
