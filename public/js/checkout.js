@@ -1,5 +1,10 @@
 // ===== Checkout Page JavaScript =====
 
+function getCsrfToken() {
+  var meta = document.querySelector('meta[name="csrf-token"]');
+  return meta ? meta.getAttribute('content') : '';
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   loadCheckoutSummary();
   setupCheckoutForm();
@@ -56,7 +61,7 @@ function setupCheckoutForm() {
 
     fetch('/api/cart/checkout', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': getCsrfToken() },
       body: JSON.stringify(formData)
     })
     .then(function(response) { return response.json(); })

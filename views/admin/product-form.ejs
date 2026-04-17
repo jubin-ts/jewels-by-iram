@@ -1,6 +1,7 @@
 <%- include('partials/admin-header') %>
 
         <form method="POST" action="/admin/products/<%= product ? 'update/' + product.id : 'create' %>" enctype="multipart/form-data" class="product-form">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <div class="form-grid">
             <div class="form-main">
               <div class="form-card">
@@ -91,7 +92,10 @@
         <script>
           function deleteImage(imageId) {
             if (!confirm('Delete this image?')) return;
-            fetch('/admin/products/delete-image/' + imageId, { method: 'POST' })
+            fetch('/admin/products/delete-image/' + imageId, {
+              method: 'POST',
+              headers: { 'X-CSRF-Token': '<%= csrfToken %>' }
+            })
               .then(r => r.json())
               .then(data => {
                 if (data.success) {
@@ -102,7 +106,10 @@
           }
 
           function setPrimaryImage(imageId) {
-            fetch('/admin/products/set-primary-image/' + imageId, { method: 'POST' })
+            fetch('/admin/products/set-primary-image/' + imageId, {
+              method: 'POST',
+              headers: { 'X-CSRF-Token': '<%= csrfToken %>' }
+            })
               .then(r => r.json())
               .then(() => location.reload());
           }

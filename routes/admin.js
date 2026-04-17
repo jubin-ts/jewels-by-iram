@@ -7,6 +7,18 @@ const bcrypt = require('bcryptjs');
 const { getDb } = require('../database/db');
 const { requireAdmin } = require('../middleware/auth');
 
+// CSRF validation middleware
+function validateCsrf(req, res, next) {
+  const token = req.body._csrf || req.headers['x-csrf-token'];
+  if (!token || token !== req.session.csrfToken) {
+    if (req.xhr || req.headers.accept?.includes('application/json')) {
+      return res.status(403).json({ error: 'Invalid CSRF token' });
+    }
+    return res.status(403).render('error', { title: 'Error', message: 'Invalid request. Please try again.' });
+  }
+  next();
+}
+
 // Multer configuration
 const storage = multer.diskStorage({
   destination: function (_req, _file, cb) {
@@ -46,7 +58,7 @@ router.get('/login', (req, res) => {
 });
 
 // Admin login handler
-router.post('/login', (req, res) => {
+router.post('/login', validateCsrf, (req, res) => {
   const db = getDb();
   const { username, password } = req.body;
 
@@ -119,7 +131,7 @@ router.get('/products/edit/:id', requireAdmin, (req, res) => {
 });
 
 // Create product
-router.post('/products/create', requireAdmin, upload.array('images', 10), (req, res) => {
+router.post('/products/create', requireAdmin, upload.array('images', 10), validateCsrf, (req, res) => {
   const db = getDb();
   const { name, description, price, wholesale_price, category_id, featured, in_stock } = req.body;
 
@@ -144,7 +156,7 @@ router.post('/products/create', requireAdmin, upload.array('images', 10), (req, 
 });
 
 // Update product
-router.post('/products/update/:id', requireAdmin, upload.array('images', 10), (req, res) => {
+router.post('/products/update/:id', requireAdmin, upload.array('images', 10), validateCsrf, (req, res) => {
   const db = getDb();
   const { name, description, price, wholesale_price, category_id, featured, in_stock } = req.body;
   const productId = req.params.id;
@@ -175,7 +187,7 @@ router.post('/products/update/:id', requireAdmin, upload.array('images', 10), (r
 });
 
 // Delete product
-router.post('/products/delete/:id', requireAdmin, (req, res) => {
+router.post('/products/delete/:id', requireAdmin, validateCsrf, (req, res) => {
   const db = getDb();
   const images = db.prepare('SELECT image_path FROM product_images WHERE product_id = ?').all(req.params.id);
 
@@ -194,7 +206,7 @@ router.post('/products/delete/:id', requireAdmin, (req, res) => {
 });
 
 // Delete product image
-router.post('/products/delete-image/:imageId', requireAdmin, (req, res) => {
+router.post('/products/delete-image/:imageId', requireAdmin, validateCsrf, (req, res) => {
   const db = getDb();
   const image = db.prepare('SELECT * FROM product_images WHERE id = ?').get(req.params.imageId);
 
@@ -219,7 +231,7 @@ router.post('/products/delete-image/:imageId', requireAdmin, (req, res) => {
 });
 
 // Set primary image
-router.post('/products/set-primary-image/:imageId', requireAdmin, (req, res) => {
+router.post('/products/set-primary-image/:imageId', requireAdmin, validateCsrf, (req, res) => {
   const db = getDb();
   const image = db.prepare('SELECT * FROM product_images WHERE id = ?').get(req.params.imageId);
 
@@ -250,7 +262,7 @@ router.get('/orders/:id', requireAdmin, (req, res) => {
 });
 
 // Update order status
-router.post('/orders/update-status/:id', requireAdmin, (req, res) => {
+router.post('/orders/update-status/:id', requireAdmin, validateCsrf, (req, res) => {
   const db = getDb();
   const { status } = req.body;
   db.prepare('UPDATE orders SET status = ? WHERE id = ?').run(status, req.params.id);
@@ -258,7 +270,7 @@ router.post('/orders/update-status/:id', requireAdmin, (req, res) => {
 });
 
 // Change admin password
-router.post('/change-password', requireAdmin, (req, res) => {
+router.post('/change-password', requireAdmin, validateCsrf, (req, res) => {
   const db = getDb();
   const { currentPassword, newPassword } = req.body;
 

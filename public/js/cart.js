@@ -1,5 +1,10 @@
 // ===== Cart Page JavaScript =====
 
+function getCsrfToken() {
+  var meta = document.querySelector('meta[name="csrf-token"]');
+  return meta ? meta.getAttribute('content') : '';
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   loadCart();
 });
@@ -68,7 +73,7 @@ function updateCartItem(productId, quantity) {
 
   fetch('/api/cart/update', {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': getCsrfToken() },
     body: JSON.stringify({ productId: productId, quantity: quantity })
   })
   .then(function(response) { return response.json(); })
@@ -81,7 +86,7 @@ function updateCartItem(productId, quantity) {
 }
 
 function removeCartItem(productId) {
-  fetch('/api/cart/remove/' + productId, { method: 'DELETE' })
+  fetch('/api/cart/remove/' + productId, { method: 'DELETE', headers: { 'X-CSRF-Token': getCsrfToken() } })
     .then(function(response) { return response.json(); })
     .then(function(data) {
       if (data.success) {
