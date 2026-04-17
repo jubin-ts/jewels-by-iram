@@ -1,0 +1,142 @@
+<%- include('partials/header') %>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1 class="hero-title animate-fade-up">Jewels by Iram</h1>
+      <p class="hero-subtitle animate-fade-up delay-1">Luxury Anti-Tarnish Jewelry</p>
+      <p class="hero-desc animate-fade-up delay-2">Discover our exquisite collection of handcrafted jewelry that combines timeless elegance with lasting beauty</p>
+      <div class="hero-buttons animate-fade-up delay-3">
+        <a href="/shop" class="btn btn-primary">Shop Collection</a>
+        <a href="https://wa.me/971567241398?text=Hi%2C%20I%27m%20interested%20in%20your%20jewelry%20collection!" class="btn btn-outline" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-whatsapp"></i> Chat With Us
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features">
+    <div class="container">
+      <div class="features-grid">
+        <div class="feature-card">
+          <i class="fas fa-gem"></i>
+          <h3>Anti-Tarnish</h3>
+          <p>Premium quality jewelry that maintains its shine and beauty over time</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-shipping-fast"></i>
+          <h3>UAE Delivery</h3>
+          <p>Fast and reliable delivery to all locations across the UAE</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-store"></i>
+          <h3>Retail & Wholesale</h3>
+          <p>Available for individual purchase and bulk wholesale orders</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-certificate"></i>
+          <h3>Quality Assured</h3>
+          <p>Every piece is crafted with attention to detail and quality materials</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section class="section categories-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Our Collections</span>
+        <h2 class="section-title">Browse by Category</h2>
+        <p class="section-desc">Explore our diverse range of luxury anti-tarnish jewelry</p>
+      </div>
+      <div class="categories-grid">
+        <% const categoryIcons = { 'bracelets': 'fa-link', 'bangles': 'fa-circle-notch', 'rings': 'fa-ring', 'chains': 'fa-link', 'anklets': 'fa-ankh', 'nose-pins': 'fa-diamond', 'waist-chains': 'fa-infinity' }; %>
+        <% categories.forEach(function(cat) { %>
+          <a href="/shop?category=<%= cat.slug %>" class="category-card">
+            <div class="category-icon">
+              <i class="fas <%= categoryIcons[cat.slug] || 'fa-gem' %>"></i>
+            </div>
+            <h3><%= cat.name %></h3>
+            <p><%= cat.description %></p>
+            <span class="category-link">Explore <i class="fas fa-arrow-right"></i></span>
+          </a>
+        <% }); %>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Products -->
+  <% if (featuredProducts.length > 0) { %>
+  <section class="section featured-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Handpicked for You</span>
+        <h2 class="section-title">Featured Collection</h2>
+        <p class="section-desc">Our most loved pieces, curated for the discerning taste</p>
+      </div>
+      <div class="products-grid">
+        <% featuredProducts.forEach(function(product) { %>
+          <div class="product-card">
+            <a href="/product/<%= product.slug %>" class="product-image">
+              <% if (product.primary_image) { %>
+                <img src="<%= product.primary_image %>" alt="<%= product.name %>" loading="lazy">
+              <% } else { %>
+                <div class="product-placeholder"><i class="fas fa-gem"></i></div>
+              <% } %>
+            </a>
+            <div class="product-info">
+              <span class="product-category"><%= product.category_name %></span>
+              <h3><a href="/product/<%= product.slug %>"><%= product.name %></a></h3>
+              <div class="product-price">AED <%= product.price.toFixed(2) %></div>
+              <button class="btn btn-add-cart" onclick="addToCart(<%= product.id %>)">
+                <i class="fas fa-shopping-bag"></i> Add to Cart
+              </button>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+      <div class="text-center mt-4">
+        <a href="/shop" class="btn btn-primary">View All Products</a>
+      </div>
+    </div>
+  </section>
+  <% } %>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Looking for Wholesale?</h2>
+        <p>We offer premium anti-tarnish jewelry at competitive wholesale prices. Contact us for bulk orders and special pricing.</p>
+        <div class="cta-buttons">
+          <a href="https://wa.me/971567241398?text=Hi%2C%20I%27m%20interested%20in%20wholesale%20pricing!" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-whatsapp"></i> WhatsApp Us
+          </a>
+          <a href="tel:+971567241398" class="btn btn-outline">
+            <i class="fas fa-phone"></i> Call Now
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Instagram CTA -->
+  <section class="section instagram-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Follow Us</span>
+        <h2 class="section-title">@jewels_by_iram.ae</h2>
+        <p class="section-desc">Follow us on Instagram for the latest collections and updates</p>
+      </div>
+      <div class="text-center">
+        <a href="https://www.instagram.com/jewels_by_iram.ae?igsh=MWdpM2hsNXljbXh6OA==" class="btn btn-instagram" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-instagram"></i> Follow on Instagram
+        </a>
+      </div>
+    </div>
+  </section>
+
+<%- include('partials/footer') %>

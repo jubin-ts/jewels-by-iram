@@ -1,0 +1,89 @@
+<%- include('partials/admin-header') %>
+
+        <div class="order-detail">
+          <div class="order-header">
+            <div>
+              <h2>Order <%= order.order_number %></h2>
+              <p class="order-date">Placed on <%= new Date(order.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) %></p>
+            </div>
+            <span class="status-badge status-<%= order.status %>"><%= order.status %></span>
+          </div>
+
+          <div class="order-grid">
+            <div class="order-card">
+              <h3>Customer Information</h3>
+              <table class="detail-table">
+                <tr><td>Name</td><td><%= order.customer_name %></td></tr>
+                <tr><td>Phone</td><td><a href="tel:<%= order.customer_phone %>"><%= order.customer_phone %></a></td></tr>
+                <% if (order.customer_email) { %>
+                  <tr><td>Email</td><td><a href="mailto:<%= order.customer_email %>"><%= order.customer_email %></a></td></tr>
+                <% } %>
+                <tr><td>Address</td><td><%= order.customer_address %></td></tr>
+                <tr><td>City</td><td><%= order.city %></td></tr>
+                <tr><td>Order Type</td><td><span class="type-badge"><%= order.order_type %></span></td></tr>
+                <% if (order.notes) { %>
+                  <tr><td>Notes</td><td><%= order.notes %></td></tr>
+                <% } %>
+              </table>
+            </div>
+
+            <div class="order-card">
+              <h3>Order Items</h3>
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% items.forEach(function(item) { %>
+                    <tr>
+                      <td><%= item.product_name %></td>
+                      <td><%= item.quantity %></td>
+                      <td>AED <%= item.price.toFixed(2) %></td>
+                      <td>AED <%= (item.price * item.quantity).toFixed(2) %></td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="3"><strong>Total</strong></td>
+                    <td><strong>AED <%= order.total_amount.toFixed(2) %></strong></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+
+          <div class="order-actions">
+            <select class="status-select" id="orderStatus" onchange="updateStatus(<%= order.id %>)">
+              <option value="pending" <%= order.status === 'pending' ? 'selected' : '' %>>Pending</option>
+              <option value="confirmed" <%= order.status === 'confirmed' ? 'selected' : '' %>>Confirmed</option>
+              <option value="shipped" <%= order.status === 'shipped' ? 'selected' : '' %>>Shipped</option>
+              <option value="delivered" <%= order.status === 'delivered' ? 'selected' : '' %>>Delivered</option>
+              <option value="cancelled" <%= order.status === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
+            </select>
+            <a href="https://wa.me/<%= order.customer_phone.replace(/[^0-9]/g, '') %>?text=Hi%20<%= encodeURIComponent(order.customer_name) %>%2C%20regarding%20your%20order%20<%= order.order_number %>" class="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-whatsapp"></i> Message Customer
+            </a>
+            <a href="/admin/orders" class="btn btn-outline">&larr; Back to Orders</a>
+          </div>
+        </div>
+
+        <script>
+          function updateStatus(orderId) {
+            const status = document.getElementById('orderStatus').value;
+            fetch('/admin/orders/update-status/' + orderId, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ status })
+            }).then(r => r.json()).then(data => {
+              if (data.success) location.reload();
+            });
+          }
+        </script>
+
+<%- include('partials/admin-footer') %>
