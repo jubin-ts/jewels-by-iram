@@ -1,0 +1,73 @@
+<%- include('partials/admin-header') %>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-gem"></i></div>
+            <div class="stat-info">
+              <h3><%= productCount %></h3>
+              <p>Products</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-shopping-bag"></i></div>
+            <div class="stat-info">
+              <h3><%= orderCount %></h3>
+              <p>Orders</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-tags"></i></div>
+            <div class="stat-info">
+              <h3><%= categoryCount %></h3>
+              <p>Categories</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+          <h2>Quick Actions</h2>
+          <div class="action-buttons">
+            <a href="/admin/products/add" class="btn btn-primary"><i class="fas fa-plus"></i> Add Product</a>
+            <a href="/admin/orders" class="btn btn-outline"><i class="fas fa-list"></i> View Orders</a>
+            <a href="/" class="btn btn-outline" target="_blank"><i class="fas fa-eye"></i> View Website</a>
+          </div>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="admin-table-section">
+          <h2>Recent Orders</h2>
+          <% if (recentOrders.length === 0) { %>
+            <p class="empty-text">No orders yet.</p>
+          <% } else { %>
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Order #</th>
+                    <th>Customer</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% recentOrders.forEach(function(order) { %>
+                    <tr>
+                      <td><strong><%= order.order_number %></strong></td>
+                      <td><%= order.customer_name %></td>
+                      <td>AED <%= order.total_amount.toFixed(2) %></td>
+                      <td><span class="status-badge status-<%= order.status %>"><%= order.status %></span></td>
+                      <td><%= new Date(order.created_at).toLocaleDateString() %></td>
+                      <td><a href="/admin/orders/<%= order.id %>" class="btn btn-sm">View</a></td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+          <% } %>
+        </div>
+
+<%- include('partials/admin-footer') %>

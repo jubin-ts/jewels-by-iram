@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> - Jewels by Iram Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-header">
+        <span class="logo-text">JBI</span>
+        <span class="logo-label">Admin</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/admin/dashboard" class="nav-item <%= title === 'Admin Dashboard' ? 'active' : '' %>">
+          <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+        <a href="/admin/products" class="nav-item <%= title === 'Manage Products' ? 'active' : '' %>">
+          <i class="fas fa-gem"></i> Products
+        </a>
+        <a href="/admin/products/add" class="nav-item <%= title === 'Add Product' ? 'active' : '' %>">
+          <i class="fas fa-plus-circle"></i> Add Product
+        </a>
+        <a href="/admin/orders" class="nav-item <%= title === 'Manage Orders' ? 'active' : '' %>">
+          <i class="fas fa-shopping-bag"></i> Orders
+        </a>
+        <div class="sidebar-divider"></div>
+        <a href="/" class="nav-item" target="_blank">
+          <i class="fas fa-external-link-alt"></i> View Website
+        </a>
+        <a href="/admin/logout" class="nav-item">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+      <header class="admin-header">
+        <button class="sidebar-toggle" id="sidebarToggle">
+          <i class="fas fa-bars"></i>
+        </button>
+        <h1><%= title %></h1>
+      </header>
+
+      <div class="admin-content">

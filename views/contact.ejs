@@ -1,0 +1,121 @@
+<%- include('partials/header') %>
+
+  <section class="page-header">
+    <div class="container">
+      <h1>Contact Us</h1>
+      <p>We'd love to hear from you</p>
+    </div>
+  </section>
+
+  <section class="section contact-section">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-card reveal-up">
+          <div class="contact-icon"><i class="fab fa-whatsapp"></i></div>
+          <h3>WhatsApp</h3>
+          <p>Chat with us anytime for orders, inquiries, or support</p>
+          <a href="https://wa.me/971567241398?text=Hi%2C%20I%27m%20interested%20in%20your%20jewelry%20collection!" class="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-whatsapp"></i> +971 56 724 1398
+          </a>
+        </div>
+        <div class="contact-card reveal-up">
+          <div class="contact-icon"><i class="fas fa-phone"></i></div>
+          <h3>Call Us</h3>
+          <p>Speak directly with our team for personalized assistance</p>
+          <a href="tel:+971567241398" class="btn btn-outline">
+            <i class="fas fa-phone"></i> +971 56 724 1398
+          </a>
+        </div>
+        <div class="contact-card reveal-up">
+          <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+          <h3>Email</h3>
+          <p>Send us an email for detailed inquiries or wholesale orders</p>
+          <a href="mailto:info@jewelsbyiram.ae" class="btn btn-outline">
+            <i class="fas fa-envelope"></i> info@jewelsbyiram.ae
+          </a>
+        </div>
+        <div class="contact-card reveal-up">
+          <div class="contact-icon"><i class="fab fa-instagram"></i></div>
+          <h3>Instagram</h3>
+          <p>Follow us for the latest collections and exclusive offers</p>
+          <a href="https://www.instagram.com/jewels_by_iram.ae?igsh=MWdpM2hsNXljbXh6OA==" class="btn btn-instagram" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-instagram"></i> @jewels_by_iram.ae
+          </a>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="contact-form-section reveal-up">
+        <div class="section-header">
+          <span class="section-label">Send a Message</span>
+          <h2 class="section-title">Get in Touch</h2>
+          <div class="gold-divider centered"></div>
+        </div>
+        <div class="contact-form-wrap">
+          <form class="contact-form" id="contactForm">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <div class="form-group">
+              <input type="text" id="contactName" name="name" required placeholder=" ">
+              <label for="contactName">Your Name</label>
+            </div>
+            <div class="form-group">
+              <input type="email" id="contactEmail" name="email" required placeholder=" ">
+              <label for="contactEmail">Your Email</label>
+            </div>
+            <div class="form-group">
+              <input type="text" id="contactSubject" name="subject" placeholder=" ">
+              <label for="contactSubject">Subject</label>
+            </div>
+            <div class="form-group">
+              <textarea id="contactMessage" name="message" rows="5" required placeholder=" "></textarea>
+              <label for="contactMessage">Your Message</label>
+            </div>
+            <button type="submit" class="btn btn-gold btn-full">Send Message</button>
+          </form>
+        </div>
+      </div>
+
+      <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+          e.preventDefault();
+          var name = document.getElementById('contactName').value;
+          var email = document.getElementById('contactEmail').value;
+          var subject = document.getElementById('contactSubject').value;
+          var message = document.getElementById('contactMessage').value;
+          var text = 'Hi, I am ' + name + '.\nEmail: ' + email +
+            (subject ? '\nSubject: ' + subject : '') +
+            '\n\n' + message;
+          window.open('https://wa.me/971567241398?text=' + encodeURIComponent(text), '_blank');
+        });
+      </script>
+
+      <div class="contact-info-block reveal-up">
+        <h2>Additional Information</h2>
+        <div class="info-items">
+          <div class="info-item">
+            <i class="fas fa-truck"></i>
+            <div>
+              <h4>Delivery</h4>
+              <p>Free delivery all over UAE</p>
+            </div>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-store"></i>
+            <div>
+              <h4>Business Type</h4>
+              <p>Retail and Wholesale available</p>
+            </div>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-gem"></i>
+            <div>
+              <h4>Product Quality</h4>
+              <p>Premium anti-tarnish jewelry</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<%- include('partials/footer') %>

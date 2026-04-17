@@ -1,0 +1,8 @@
+node_modules/
+jewels.db
+jewels.db-wal
+jewels.db-shm
+public/uploads/*
+!public/uploads/.gitkeep
+.env
+*.log

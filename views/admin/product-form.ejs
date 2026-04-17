@@ -1,0 +1,118 @@
+<%- include('partials/admin-header') %>
+
+        <form method="POST" action="/admin/products/<%= product ? 'update/' + product.id : 'create' %>" enctype="multipart/form-data" class="product-form">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <div class="form-grid">
+            <div class="form-main">
+              <div class="form-card">
+                <h3>Product Information</h3>
+                <div class="form-group">
+                  <label for="name">Product Name *</label>
+                  <input type="text" id="name" name="name" required value="<%= product ? product.name : '' %>" placeholder="e.g., Gold Plated Bracelet">
+                </div>
+                <div class="form-group">
+                  <label for="description">Description</label>
+                  <textarea id="description" name="description" rows="4" placeholder="Describe this product..."><%= product ? product.description : '' %></textarea>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="price">Retail Price (AED) *</label>
+                    <input type="number" id="price" name="price" step="0.01" min="0" required value="<%= product ? product.price : '' %>" placeholder="0.00">
+                  </div>
+                  <div class="form-group">
+                    <label for="wholesale_price">Wholesale Price (AED)</label>
+                    <input type="number" id="wholesale_price" name="wholesale_price" step="0.01" min="0" value="<%= product && product.wholesale_price ? product.wholesale_price : '' %>" placeholder="0.00">
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-card">
+                <h3>Product Images</h3>
+                <% if (images && images.length > 0) { %>
+                  <div class="existing-images">
+                    <% images.forEach(function(img) { %>
+                      <div class="image-item" id="img-<%= img.id %>">
+                        <img src="<%= img.image_path %>" alt="Product image">
+                        <div class="image-actions">
+                          <% if (!img.is_primary) { %>
+                            <button type="button" class="btn btn-sm" onclick="setPrimaryImage(<%= img.id %>)"><i class="fas fa-star"></i> Set Primary</button>
+                          <% } else { %>
+                            <span class="primary-badge"><i class="fas fa-star"></i> Primary</span>
+                          <% } %>
+                          <button type="button" class="btn btn-sm btn-delete" onclick="deleteImage(<%= img.id %>)"><i class="fas fa-trash"></i></button>
+                        </div>
+                      </div>
+                    <% }); %>
+                  </div>
+                <% } %>
+                <div class="form-group">
+                  <label for="images">Upload Images (Max 10, 5MB each)</label>
+                  <input type="file" id="images" name="images" multiple accept="image/jpeg,image/png,image/webp,image/gif">
+                  <small>Supported formats: JPEG, PNG, WebP, GIF. First uploaded image will be set as primary if no primary exists.</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-sidebar">
+              <div class="form-card">
+                <h3>Category & Status</h3>
+                <div class="form-group">
+                  <label for="category_id">Category *</label>
+                  <select id="category_id" name="category_id" required>
+                    <option value="">Select Category</option>
+                    <% categories.forEach(function(cat) { %>
+                      <option value="<%= cat.id %>" <%= product && product.category_id === cat.id ? 'selected' : '' %>><%= cat.name %></option>
+                    <% }); %>
+                  </select>
+                </div>
+                <div class="form-group checkbox-group">
+                  <label>
+                    <input type="checkbox" name="featured" value="1" <%= product && product.featured ? 'checked' : '' %>>
+                    Featured Product
+                  </label>
+                </div>
+                <div class="form-group checkbox-group">
+                  <label>
+                    <input type="checkbox" name="in_stock" value="1" <%= (!product || product.in_stock) ? 'checked' : '' %>>
+                    In Stock
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-card">
+                <button type="submit" class="btn btn-primary btn-block">
+                  <i class="fas fa-save"></i> <%= product ? 'Update Product' : 'Add Product' %>
+                </button>
+                <a href="/admin/products" class="btn btn-outline btn-block mt-2">Cancel</a>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <script>
+          function deleteImage(imageId) {
+            if (!confirm('Delete this image?')) return;
+            fetch('/admin/products/delete-image/' + imageId, {
+              method: 'POST',
+              headers: { 'X-CSRF-Token': '<%= csrfToken %>' }
+            })
+              .then(r => r.json())
+              .then(data => {
+                if (data.success) {
+                  const el = document.getElementById('img-' + imageId);
+                  if (el) el.remove();
+                }
+              });
+          }
+
+          function setPrimaryImage(imageId) {
+            fetch('/admin/products/set-primary-image/' + imageId, {
+              method: 'POST',
+              headers: { 'X-CSRF-Token': '<%= csrfToken %>' }
+            })
+              .then(r => r.json())
+              .then(() => location.reload());
+          }
+        </script>
+
+<%- include('partials/admin-footer') %>
