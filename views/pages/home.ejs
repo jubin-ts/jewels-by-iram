@@ -257,7 +257,8 @@
   <div class="container-narrow">
     <h2 style="color: var(--color-white); margin-bottom: 0.5rem;">Stay in Touch</h2>
     <p style="color: rgba(255,255,255,0.7); margin-bottom: 2rem;">Subscribe to get exclusive offers, new arrival updates, and styling tips delivered to your inbox.</p>
-    <form class="newsletter-form" style="max-width: 480px; margin: 0 auto;">
+    <form class="newsletter-form" method="POST" action="#" style="max-width: 480px; margin: 0 auto;">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <input type="email" placeholder="Enter your email address" required aria-label="Email for newsletter">
       <button type="submit">Subscribe</button>
     </form>
