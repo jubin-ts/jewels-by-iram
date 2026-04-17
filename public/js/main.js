@@ -91,3 +91,10 @@ function showToast(message) {
     }, 3000);
   }
 }
+
+// Escape HTML to prevent XSS
+function escapeHtml(text) {
+  var div = document.createElement('div');
+  div.appendChild(document.createTextNode(text));
+  return div.innerHTML;
+}

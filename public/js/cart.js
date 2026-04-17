@@ -1,9 +1,5 @@
 // ===== Cart Page JavaScript =====
-
-function getCsrfToken() {
-  var meta = document.querySelector('meta[name="csrf-token"]');
-  return meta ? meta.getAttribute('content') : '';
-}
+// getCsrfToken, escapeHtml, showToast, updateCartBadge are defined in main.js
 
 document.addEventListener('DOMContentLoaded', function() {
   loadCart();
@@ -97,28 +93,4 @@ function removeCartItem(productId) {
     });
 }
 
-function updateCartBadge(count) {
-  var badge = document.getElementById('cartBadge');
-  if (badge) {
-    badge.textContent = count;
-    badge.style.display = count > 0 ? 'flex' : 'none';
-  }
-}
-
-function showToast(message) {
-  var toast = document.getElementById('toast');
-  var toastMsg = document.getElementById('toastMessage');
-  if (toast && toastMsg) {
-    toastMsg.textContent = message;
-    toast.classList.add('show');
-    setTimeout(function() {
-      toast.classList.remove('show');
-    }, 3000);
-  }
-}
-
-function escapeHtml(text) {
-  var div = document.createElement('div');
-  div.appendChild(document.createTextNode(text));
-  return div.innerHTML;
-}
+// escapeHtml, showToast, updateCartBadge, and getCsrfToken are defined in main.js

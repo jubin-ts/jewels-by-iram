@@ -99,10 +99,8 @@ const adminRoutes = require('./routes/admin');
 app.use('/', publicRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', validateCsrf, cartRoutes);
-app.use('/admin', adminRoutes);
-
-// Apply auth rate limiter specifically to admin login
 app.post('/admin/login', authLimiter);
+app.use('/admin', adminRoutes);
 
 // 404 handler
 app.use((req, res) => {

@@ -63,7 +63,10 @@ router.post('/login', validateCsrf, (req, res) => {
   const { username, password } = req.body;
 
   const admin = db.prepare('SELECT * FROM admin_users WHERE username = ?').get(username);
-  if (!admin || !bcrypt.compareSync(password, admin.password)) {
+  // Always perform bcrypt comparison to prevent timing-based username enumeration
+  const dummyHash = '$2a$10$abcdefghijklmnopqrstuuABCDEFGHIJKLMNOPQRSTUVWXYZ012';
+  const isValid = bcrypt.compareSync(password || '', admin ? admin.password : dummyHash);
+  if (!admin || !isValid) {
     return res.render('admin/login', { title: 'Admin Login', error: 'Invalid credentials' });
   }
 

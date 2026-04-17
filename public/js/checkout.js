@@ -1,9 +1,5 @@
 // ===== Checkout Page JavaScript =====
-
-function getCsrfToken() {
-  var meta = document.querySelector('meta[name="csrf-token"]');
-  return meta ? meta.getAttribute('content') : '';
-}
+// getCsrfToken and escapeHtml are defined in main.js
 
 document.addEventListener('DOMContentLoaded', function() {
   loadCheckoutSummary();
@@ -97,8 +93,4 @@ function setupCheckoutForm() {
   });
 }
 
-function escapeHtml(text) {
-  var div = document.createElement('div');
-  div.appendChild(document.createTextNode(text));
-  return div.innerHTML;
-}
+// escapeHtml and getCsrfToken are defined in main.js
