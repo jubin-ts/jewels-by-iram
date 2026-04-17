@@ -38,4 +38,16 @@ router.post('/contact', (req, res) => {
   res.redirect('/contact');
 });
 
+// Newsletter subscription
+router.post('/newsletter', (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    req.flash('error', 'Please provide your email address');
+    return res.redirect('back');
+  }
+  req.flash('success', 'Thank you for subscribing to our newsletter!');
+  const referer = req.get('Referer') || '/';
+  res.redirect(referer);
+});
+
 module.exports = router;

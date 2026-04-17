@@ -67,9 +67,9 @@
           </div>
           <div class="footer-newsletter" style="margin-top: 1rem;">
             <p>Subscribe to our newsletter</p>
-            <form class="newsletter-form" action="#" method="POST">
+            <form class="newsletter-form" action="/newsletter" method="POST">
               <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-              <input type="email" placeholder="Your email" aria-label="Email for newsletter" required>
+              <input type="email" name="email" placeholder="Your email" aria-label="Email for newsletter" required>
               <button type="submit">Subscribe</button>
             </form>
           </div>

@@ -84,7 +84,7 @@ for (const p of products) {
 console.log('✓ Products seeded (' + products.length + ' products)');
 
 // Seed admin user
-const adminEmail = process.env.ADMIN_EMAIL || 'admin@jewelsByIram.com';
+const adminEmail = process.env.ADMIN_EMAIL || 'admin@jewelsbyiram.com';
 const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
 const hash = bcryptjs.hashSync(adminPassword, 10);
 
