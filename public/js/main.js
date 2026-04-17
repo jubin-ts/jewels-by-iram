@@ -580,7 +580,8 @@ document.addEventListener('DOMContentLoaded', function () {
         labels.forEach(function (l) {
           var inp = document.getElementById(l.getAttribute('for'));
           if (inp) {
-            l.style.color = parseInt(inp.value, 10) <= hoverVal ? '' : '';
+            var starVal = parseInt(inp.value, 10);
+            l.style.color = starVal <= hoverVal ? 'var(--color-primary, #C5A55A)' : '';
           }
         });
       });
