@@ -5,7 +5,8 @@ const bcrypt = require('bcryptjs');
 let db;
 
 function initDatabase() {
-  db = new Database(path.join(__dirname, '..', 'jewels.db'));
+  const dbPath = process.env.DATABASE_PATH || path.join(__dirname, '..', 'jewels.db');
+  db = new Database(dbPath);
 
   // Enable WAL mode for better performance
   db.pragma('journal_mode = WAL');
