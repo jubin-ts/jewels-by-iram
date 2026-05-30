@@ -143,6 +143,7 @@ router.post('/checkout', (req, res) => {
 
   res.json({
     success: true,
+    orderId: order.orderId,
     orderNumber: order.orderNumber,
     whatsappUrl,
     total: totalAmount

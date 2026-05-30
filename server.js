@@ -3,7 +3,27 @@ const session = require('express-session');
 const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
+const fs = require('fs');
 const { initDatabase } = require('./database/db');
+
+// Load environment variables from .env file
+const envPath = path.join(__dirname, '.env');
+if (fs.existsSync(envPath)) {
+  const envContent = fs.readFileSync(envPath, 'utf8');
+  for (const line of envContent.split('\n')) {
+    const trimmed = line.trim();
+    if (trimmed && !trimmed.startsWith('#')) {
+      const eqIndex = trimmed.indexOf('=');
+      if (eqIndex > 0) {
+        const key = trimmed.slice(0, eqIndex).trim();
+        const value = trimmed.slice(eqIndex + 1).trim();
+        if (!process.env[key]) {
+          process.env[key] = value;
+        }
+      }
+    }
+  }
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -95,10 +115,12 @@ const publicRoutes = require('./routes/public');
 const productRoutes = require('./routes/products');
 const cartRoutes = require('./routes/cart');
 const adminRoutes = require('./routes/admin');
+const paymentRoutes = require('./routes/payment');
 
 app.use('/', publicRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', validateCsrf, cartRoutes);
+app.use('/payment', validateCsrf, paymentRoutes);
 app.post('/admin/login', authLimiter);
 app.use('/admin', adminRoutes);
 

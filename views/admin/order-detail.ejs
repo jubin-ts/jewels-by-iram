@@ -66,6 +66,9 @@
               <option value="delivered" <%= order.status === 'delivered' ? 'selected' : '' %>>Delivered</option>
               <option value="cancelled" <%= order.status === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
             </select>
+            <a href="/admin/orders/<%= order.id %>/pdf" class="btn btn-primary" target="_blank">
+              <i class="fas fa-file-pdf"></i> Download PDF
+            </a>
             <a href="https://wa.me/<%= order.customer_phone.replace(/[^0-9]/g, '') %>?text=Hi%20<%= encodeURIComponent(order.customer_name) %>%2C%20regarding%20your%20order%20<%= order.order_number %>" class="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
               <i class="fab fa-whatsapp"></i> Message Customer
             </a>

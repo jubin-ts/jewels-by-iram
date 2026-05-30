@@ -4,6 +4,7 @@
 document.addEventListener('DOMContentLoaded', function() {
   loadCheckoutSummary();
   setupCheckoutForm();
+  setupOnlinePayment();
 });
 
 function loadCheckoutSummary() {
@@ -94,3 +95,66 @@ function setupCheckoutForm() {
 }
 
 // escapeHtml and getCsrfToken are defined in main.js
+
+function setupOnlinePayment() {
+  var payBtn = document.getElementById('payOnlineBtn');
+  if (!payBtn) return;
+
+  payBtn.addEventListener('click', function() {
+    var form = document.getElementById('checkoutForm');
+    var name = document.getElementById('name').value.trim();
+    var phone = document.getElementById('phone').value.trim();
+    var address = document.getElementById('address').value.trim();
+    var city = document.getElementById('city').value;
+
+    if (!name || !phone || !address || !city) {
+      alert('Please fill in all required fields before paying.');
+      return;
+    }
+
+    payBtn.disabled = true;
+    payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+    var formData = {
+      name: name,
+      phone: phone,
+      email: document.getElementById('email').value.trim(),
+      address: address,
+      city: city,
+      orderType: document.getElementById('orderType').value,
+      notes: document.getElementById('notes').value.trim()
+    };
+
+    // First create the order
+    fetch('/api/cart/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': getCsrfToken() },
+      body: JSON.stringify(formData)
+    })
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+      if (data.success) {
+        // Now create payment intent
+        return fetch('/payment/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': getCsrfToken() },
+          body: JSON.stringify({ orderId: data.orderId })
+        }).then(function(r) { return r.json(); });
+      } else {
+        throw new Error(data.error || 'Failed to place order');
+      }
+    })
+    .then(function(paymentData) {
+      if (paymentData.success && paymentData.redirectUrl) {
+        window.location.href = paymentData.redirectUrl;
+      } else {
+        throw new Error(paymentData.error || 'Payment initialization failed');
+      }
+    })
+    .catch(function(err) {
+      payBtn.disabled = false;
+      payBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pay Online with Ziina';
+      alert(err.message || 'Something went wrong. Please try again.');
+    });
+  });
+}

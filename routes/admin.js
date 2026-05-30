@@ -6,6 +6,7 @@ const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const { getDb } = require('../database/db');
 const { requireAdmin } = require('../middleware/auth');
+const { generateOrderPDF } = require('../utils/pdf');
 
 // CSRF validation middleware
 function validateCsrf(req, res, next) {
@@ -251,6 +252,20 @@ router.get('/orders', requireAdmin, (req, res) => {
   const db = getDb();
   const orders = db.prepare('SELECT * FROM orders ORDER BY created_at DESC').all();
   res.render('admin/orders', { title: 'Manage Orders', orders });
+});
+
+// Download order PDF
+router.get('/orders/:id/pdf', requireAdmin, (req, res) => {
+  const db = getDb();
+  const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(req.params.id);
+  if (!order) {
+    return res.redirect('/admin/orders');
+  }
+  const items = db.prepare('SELECT * FROM order_items WHERE order_id = ?').all(order.id);
+
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', `attachment; filename=Invoice-${order.order_number}.pdf`);
+  generateOrderPDF(order, items, res);
 });
 
 // Order detail

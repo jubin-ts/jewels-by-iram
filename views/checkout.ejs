@@ -56,9 +56,14 @@
               <label for="notes">Order Notes (Optional)</label>
               <textarea id="notes" name="notes" placeholder="Any special requests or notes" rows="2"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary btn-block btn-lg">
-              <i class="fas fa-check"></i> Place Order & Send via WhatsApp
-            </button>
+            <div class="checkout-buttons" style="display: flex; flex-direction: column; gap: 12px;">
+              <button type="submit" class="btn btn-primary btn-block btn-lg" data-method="whatsapp">
+                <i class="fas fa-check"></i> Place Order & Send via WhatsApp
+              </button>
+              <button type="button" id="payOnlineBtn" class="btn btn-block btn-lg" style="background: #1a73e8; color: white; border: none; padding: 14px; border-radius: 4px; font-size: 16px; cursor: pointer;">
+                <i class="fas fa-credit-card"></i> Pay Online with Ziina
+              </button>
+            </div>
           </form>
         </div>
 
