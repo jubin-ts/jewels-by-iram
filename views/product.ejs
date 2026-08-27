@@ -1,0 +1,123 @@
+<%- include('partials/header') %>
+
+  <!-- Product Detail -->
+  <section class="section product-detail-section">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a href="/">Home</a> / <a href="/shop">Shop</a> / <a href="/shop?category=<%= product.category_slug %>"><%= product.category_name %></a> / <span><%= product.name %></span>
+      </nav>
+
+      <div class="product-detail">
+        <!-- Image Gallery -->
+        <div class="product-gallery">
+          <div class="gallery-main">
+            <% if (images.length > 0) { %>
+              <img src="<%= images[0].image_path %>" alt="<%= product.name %>" id="mainImage">
+            <% } else { %>
+              <div class="product-placeholder-large"><i class="fas fa-gem"></i></div>
+            <% } %>
+          </div>
+          <% if (images.length > 1) { %>
+            <div class="gallery-thumbs">
+              <% images.forEach(function(img, index) { %>
+                <div class="thumb <%= index === 0 ? 'active' : '' %>" onclick="changeImage('<%= img.image_path %>', this)">
+                  <img src="<%= img.image_path %>" alt="<%= product.name %> - Image <%= index + 1 %>">
+                </div>
+              <% }); %>
+            </div>
+          <% } %>
+        </div>
+
+        <!-- Product Info -->
+        <div class="product-detail-info">
+          <span class="product-category"><%= product.category_name %></span>
+          <h1><%= product.name %></h1>
+          <div class="product-price-large">AED <%= product.price.toFixed(2) %></div>
+
+          <% if (product.wholesale_price) { %>
+            <div class="wholesale-price">
+              <i class="fas fa-tag"></i> Wholesale Price: AED <%= product.wholesale_price.toFixed(2) %>
+              <small>(Contact for bulk orders)</small>
+            </div>
+          <% } %>
+
+          <div class="product-desc">
+            <p><%= product.description || 'A beautifully crafted piece from our luxury anti-tarnish jewelry collection.' %></p>
+          </div>
+
+          <div class="product-features">
+            <div class="feature-item"><i class="fas fa-check-circle"></i> Anti-Tarnish Quality</div>
+            <div class="feature-item"><i class="fas fa-check-circle"></i> Premium Materials</div>
+            <div class="feature-item"><i class="fas fa-check-circle"></i> Free UAE Delivery</div>
+          </div>
+
+          <div class="product-actions">
+            <div class="quantity-selector">
+              <button onclick="decrementQty()" class="qty-btn">-</button>
+              <input type="number" id="quantity" value="1" min="1" max="99" readonly>
+              <button onclick="incrementQty()" class="qty-btn">+</button>
+            </div>
+            <button class="btn btn-primary btn-lg" onclick="addToCart(<%= product.id %>, document.getElementById('quantity').value)">
+              <i class="fas fa-shopping-bag"></i> Add to Cart
+            </button>
+          </div>
+
+          <div class="product-contact">
+            <a href="https://wa.me/971567241398?text=Hi%2C%20I%27m%20interested%20in%20<%= encodeURIComponent(product.name) %>" class="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-whatsapp"></i> Order via WhatsApp
+            </a>
+            <a href="tel:+971567241398" class="btn btn-outline">
+              <i class="fas fa-phone"></i> Call to Order
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Related Products -->
+      <% if (relatedProducts.length > 0) { %>
+        <div class="related-products">
+          <h2 class="section-title">You May Also Like</h2>
+          <div class="products-grid">
+            <% relatedProducts.forEach(function(rp) { %>
+              <div class="product-card">
+                <a href="/product/<%= rp.slug %>" class="product-image">
+                  <% if (rp.primary_image) { %>
+                    <img src="<%= rp.primary_image %>" alt="<%= rp.name %>" loading="lazy">
+                  <% } else { %>
+                    <div class="product-placeholder"><i class="fas fa-gem"></i></div>
+                  <% } %>
+                </a>
+                <div class="product-info">
+                  <h3><a href="/product/<%= rp.slug %>"><%= rp.name %></a></h3>
+                  <div class="product-price">AED <%= rp.price.toFixed(2) %></div>
+                  <button class="btn btn-add-cart" onclick="addToCart(<%= rp.id %>)">
+                    <i class="fas fa-shopping-bag"></i> Add to Cart
+                  </button>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <script>
+    function changeImage(src, thumb) {
+      document.getElementById('mainImage').src = src;
+      document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+      thumb.classList.add('active');
+    }
+
+    function incrementQty() {
+      const input = document.getElementById('quantity');
+      if (parseInt(input.value) < 99) input.value = parseInt(input.value) + 1;
+    }
+
+    function decrementQty() {
+      const input = document.getElementById('quantity');
+      if (parseInt(input.value) > 1) input.value = parseInt(input.value) - 1;
+    }
+  </script>
+
+<%- include('partials/footer') %>
