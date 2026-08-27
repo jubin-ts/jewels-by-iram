@@ -5,6 +5,7 @@ const rateLimit = require('express-rate-limit');
 const path = require('path');
 const fs = require('fs');
 const { initDatabase } = require('./database/db');
+const { UPLOADS_DIR } = require('./utils/uploadsPath');
 
 // Load environment variables from .env file
 const envPath = path.join(__dirname, '.env');
@@ -61,7 +62,10 @@ app.use(generalLimiter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+if (!fs.existsSync(UPLOADS_DIR)) {
+    fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+}
+app.use('/uploads', express.static(UPLOADS_DIR));
 
 // Generate a random session secret if not provided
 const sessionSecret = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
