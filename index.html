@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jewels by Iram — Exquisite Handcrafted Jewellery</title>
+  <meta name="description" content="Discover exquisite handcrafted jewellery by Iram. Timeless elegance meets modern design in every piece.">
+  <link rel="icon" type="image/jpeg" href="images/logo.jpeg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#home" class="nav-logo">
+        <img src="images/logo.jpeg" alt="Jewels by Iram" class="logo-img">
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="#home" class="nav-link">Home</a></li>
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="#collections" class="nav-link">Collections</a></li>
+        <li><a href="#lookbook" class="nav-link">Lookbook</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ===== HERO SECTION ===== -->
+  <section class="hero" id="home">
+    <div class="hero-slider">
+      <div class="hero-slide active" style="background-image: url('images/hero/hero-1.jpeg')"></div>
+      <div class="hero-slide" style="background-image: url('images/hero/hero-2.jpeg')"></div>
+      <div class="hero-slide" style="background-image: url('images/hero/hero-3.jpeg')"></div>
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <img src="images/logo.jpeg" alt="Jewels by Iram" class="hero-logo">
+      <p class="hero-tagline">Where Elegance Meets Craftsmanship</p>
+      <div class="hero-divider">
+        <span class="diamond-icon">&#9670;</span>
+      </div>
+      <p class="hero-subtitle">Handcrafted jewellery that tells your story</p>
+      <a href="#collections" class="btn btn-gold">Explore Collections</a>
+    </div>
+    <div class="hero-scroll-indicator">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT SECTION ===== -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-image reveal-left">
+          <img src="images/lookbook/model-4.jpeg" alt="Jewels by Iram craftsmanship" loading="lazy">
+          <div class="about-image-accent"></div>
+        </div>
+        <div class="about-content reveal-right">
+          <span class="section-label">Our Story</span>
+          <h2 class="section-title">Crafting Timeless<br>Elegance</h2>
+          <div class="gold-divider"></div>
+          <p>At <strong>Jewels by Iram</strong>, every piece is a testament to the art of fine jewellery making. We believe that jewellery is more than an accessory — it is an expression of individuality, a celebration of moments, and a legacy to be cherished.</p>
+          <p>Our collections blend traditional craftsmanship with contemporary design, creating pieces that are as unique as the women who wear them. Each jewel is meticulously handcrafted with the finest materials and an unwavering attention to detail.</p>
+          <div class="about-stats">
+            <div class="stat">
+              <span class="stat-number">100+</span>
+              <span class="stat-label">Unique Designs</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number">500+</span>
+              <span class="stat-label">Happy Clients</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number">5+</span>
+              <span class="stat-label">Years of Craft</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURED BANNER ===== -->
+  <section class="featured-banner">
+    <div class="parallax-bg" style="background-image: url('images/hero/hero-2.jpeg')"></div>
+    <div class="featured-overlay"></div>
+    <div class="featured-content">
+      <span class="section-label light">Featured</span>
+      <h2 class="section-title light">The Signature Collection</h2>
+      <p class="featured-text">Discover pieces that define sophistication — designed to be treasured for generations.</p>
+      <a href="#collections" class="btn btn-outline-light">View Collection</a>
+    </div>
+  </section>
+
+  <!-- ===== COLLECTIONS SECTION ===== -->
+  <section class="collections" id="collections">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Our Creations</span>
+        <h2 class="section-title">Exquisite Collections</h2>
+        <div class="gold-divider centered"></div>
+        <p class="section-desc">Each piece is a masterwork of design and craftsmanship, created to captivate and inspire.</p>
+      </div>
+
+      <div class="collection-filter">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="necklaces">Necklaces</button>
+        <button class="filter-btn" data-filter="earrings">Earrings</button>
+        <button class="filter-btn" data-filter="sets">Jewellery Sets</button>
+      </div>
+
+      <div class="collection-grid">
+        <div class="collection-item reveal-up" data-category="necklaces">
+          <div class="collection-img-wrap">
+            <img src="images/collection/jewel-1.jpeg" alt="Handcrafted necklace by Jewels by Iram" loading="lazy">
+            <div class="collection-overlay">
+              <button class="view-btn" aria-label="View larger image">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="collection-info">
+            <h3>Royal Heritage Necklace</h3>
+            <p>Necklaces</p>
+          </div>
+        </div>
+
+        <div class="collection-item reveal-up" data-category="earrings">
+          <div class="collection-img-wrap">
+            <img src="images/collection/jewel-2.jpeg" alt="Elegant earrings by Jewels by Iram" loading="lazy">
+            <div class="collection-overlay">
+              <button class="view-btn" aria-label="View larger image">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="collection-info">
+            <h3>Celestial Drop Earrings</h3>
+            <p>Earrings</p>
+          </div>
+        </div>
+
+        <div class="collection-item reveal-up" data-category="sets">
+          <div class="collection-img-wrap">
+            <img src="images/collection/jewel-3.jpeg" alt="Jewellery set by Jewels by Iram" loading="lazy">
+            <div class="collection-overlay">
+              <button class="view-btn" aria-label="View larger image">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="collection-info">
+            <h3>Empress Bridal Set</h3>
+            <p>Jewellery Sets</p>
+          </div>
+        </div>
+
+        <div class="collection-item reveal-up" data-category="necklaces">
+          <div class="collection-img-wrap">
+            <img src="images/collection/jewel-4.jpeg" alt="Statement necklace by Jewels by Iram" loading="lazy">
+            <div class="collection-overlay">
+              <button class="view-btn" aria-label="View larger image">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="collection-info">
+            <h3>Opulent Statement Piece</h3>
+            <p>Necklaces</p>
+          </div>
+        </div>
+
+        <div class="collection-item reveal-up" data-category="earrings">
+          <div class="collection-img-wrap">
+            <img src="images/collection/jewel-5.jpeg" alt="Designer earrings by Jewels by Iram" loading="lazy">
+            <div class="collection-overlay">
+              <button class="view-btn" aria-label="View larger image">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="collection-info">
+            <h3>Vintage Charm Earrings</h3>
+            <p>Earrings</p>
+          </div>
+        </div>
+
+        <div class="collection-item reveal-up" data-category="sets">
+          <div class="collection-img-wrap">
+            <img src="images/collection/jewel-6.jpeg" alt="Bridal jewellery by Jewels by Iram" loading="lazy">
+            <div class="collection-overlay">
+              <button class="view-btn" aria-label="View larger image">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="collection-info">
+            <h3>Midnight Radiance Set</h3>
+            <p>Jewellery Sets</p>
+          </div>
+        </div>
+
+        <div class="collection-item reveal-up" data-category="necklaces">
+          <div class="collection-img-wrap">
+            <img src="images/collection/jewel-7.jpeg" alt="Gold necklace by Jewels by Iram" loading="lazy">
+            <div class="collection-overlay">
+              <button class="view-btn" aria-label="View larger image">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="collection-info">
+            <h3>Golden Cascade Necklace</h3>
+            <p>Necklaces</p>
+          </div>
+        </div>
+
+        <div class="collection-item reveal-up" data-category="earrings">
+          <div class="collection-img-wrap">
+            <img src="images/collection/jewel-8.jpeg" alt="Pearl earrings by Jewels by Iram" loading="lazy">
+            <div class="collection-overlay">
+              <button class="view-btn" aria-label="View larger image">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="collection-info">
+            <h3>Pearl Lustre Earrings</h3>
+            <p>Earrings</p>
+          </div>
+        </div>
+
+        <div class="collection-item reveal-up" data-category="sets">
+          <div class="collection-img-wrap">
+            <img src="images/collection/jewel-9.jpeg" alt="Designer jewellery set by Jewels by Iram" loading="lazy">
+            <div class="collection-overlay">
+              <button class="view-btn" aria-label="View larger image">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="collection-info">
+            <h3>Regal Dynasty Set</h3>
+            <p>Jewellery Sets</p>
+          </div>
+        </div>
+
+        <div class="collection-item reveal-up" data-category="necklaces">
+          <div class="collection-img-wrap">
+            <img src="images/collection/jewel-10.jpeg" alt="Choker necklace by Jewels by Iram" loading="lazy">
+            <div class="collection-overlay">
+              <button class="view-btn" aria-label="View larger image">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="collection-info">
+            <h3>Ethereal Choker</h3>
+            <p>Necklaces</p>
+          </div>
+        </div>
+
+        <div class="collection-item reveal-up" data-category="earrings">
+          <div class="collection-img-wrap">
+            <img src="images/collection/jewel-11.jpeg" alt="Jhumka earrings by Jewels by Iram" loading="lazy">
+            <div class="collection-overlay">
+              <button class="view-btn" aria-label="View larger image">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="collection-info">
+            <h3>Enchanted Jhumkas</h3>
+            <p>Earrings</p>
+          </div>
+        </div>
+
+        <div class="collection-item reveal-up" data-category="sets">
+          <div class="collection-img-wrap">
+            <img src="images/collection/jewel-12.jpeg" alt="Complete jewellery set by Jewels by Iram" loading="lazy">
+            <div class="collection-overlay">
+              <button class="view-btn" aria-label="View larger image">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="collection-info">
+            <h3>Timeless Grace Set</h3>
+            <p>Jewellery Sets</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== LOOKBOOK SECTION ===== -->
+  <section class="lookbook" id="lookbook">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Style Inspiration</span>
+        <h2 class="section-title">The Lookbook</h2>
+        <div class="gold-divider centered"></div>
+        <p class="section-desc">See our jewellery come alive — styled, worn, and celebrated.</p>
+      </div>
+
+      <div class="lookbook-grid">
+        <div class="lookbook-item lookbook-large reveal-up">
+          <img src="images/lookbook/model-1.jpeg" alt="Model wearing Jewels by Iram jewellery" loading="lazy">
+          <div class="lookbook-overlay">
+            <span class="lookbook-tag">Editorial</span>
+          </div>
+        </div>
+        <div class="lookbook-item reveal-up">
+          <img src="images/lookbook/model-2.jpeg" alt="Model showcasing necklace" loading="lazy">
+          <div class="lookbook-overlay">
+            <span class="lookbook-tag">Bridal</span>
+          </div>
+        </div>
+        <div class="lookbook-item reveal-up">
+          <img src="images/lookbook/model-3.jpeg" alt="Model with earrings" loading="lazy">
+          <div class="lookbook-overlay">
+            <span class="lookbook-tag">Occasion</span>
+          </div>
+        </div>
+        <div class="lookbook-item reveal-up">
+          <img src="images/lookbook/model-4.jpeg" alt="Styled jewellery look" loading="lazy">
+          <div class="lookbook-overlay">
+            <span class="lookbook-tag">Classic</span>
+          </div>
+        </div>
+        <div class="lookbook-item lookbook-large reveal-up">
+          <img src="images/lookbook/model-5.jpeg" alt="Model in designer jewellery" loading="lazy">
+          <div class="lookbook-overlay">
+            <span class="lookbook-tag">Couture</span>
+          </div>
+        </div>
+        <div class="lookbook-item reveal-up">
+          <img src="images/lookbook/model-6.jpeg" alt="Jewellery styling" loading="lazy">
+          <div class="lookbook-overlay">
+            <span class="lookbook-tag">Festive</span>
+          </div>
+        </div>
+        <div class="lookbook-item reveal-up">
+          <img src="images/lookbook/model-7.jpeg" alt="Elegant jewellery look" loading="lazy">
+          <div class="lookbook-overlay">
+            <span class="lookbook-tag">Modern</span>
+          </div>
+        </div>
+        <div class="lookbook-item reveal-up">
+          <img src="images/lookbook/model-8.jpeg" alt="Statement jewellery styling" loading="lazy">
+          <div class="lookbook-overlay">
+            <span class="lookbook-tag">Statement</span>
+          </div>
+        </div>
+        <div class="lookbook-item lookbook-large reveal-up">
+          <img src="images/lookbook/model-9.jpeg" alt="Bridal jewellery look" loading="lazy">
+          <div class="lookbook-overlay">
+            <span class="lookbook-tag">Bridal</span>
+          </div>
+        </div>
+        <div class="lookbook-item reveal-up">
+          <img src="images/lookbook/model-10.jpeg" alt="Contemporary jewellery styling" loading="lazy">
+          <div class="lookbook-overlay">
+            <span class="lookbook-tag">Contemporary</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIAL BANNER ===== -->
+  <section class="testimonial-banner">
+    <div class="parallax-bg" style="background-image: url('images/hero/hero-3.jpeg')"></div>
+    <div class="featured-overlay"></div>
+    <div class="testimonial-content">
+      <svg class="quote-icon" width="48" height="48" viewBox="0 0 24 24" fill="currentColor"><path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/></svg>
+      <blockquote>
+        Every piece from Jewels by Iram carries a piece of art and a touch of soul. It's not just jewellery — it's a statement of who you are.
+      </blockquote>
+      <div class="gold-divider centered"></div>
+      <cite>— A Satisfied Client</cite>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT SECTION ===== -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-info reveal-left">
+          <span class="section-label">Get in Touch</span>
+          <h2 class="section-title">Let's Create<br>Something Beautiful</h2>
+          <div class="gold-divider"></div>
+          <p>Whether you're looking for the perfect piece for a special occasion or want to create a bespoke design, we'd love to hear from you.</p>
+          <div class="contact-details">
+            <div class="contact-detail">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <span>hello@jewelsbyiram.com</span>
+            </div>
+            <div class="contact-detail">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <span>+91 98765 43210</span>
+            </div>
+            <div class="contact-detail">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>Mumbai, India</span>
+            </div>
+          </div>
+          <div class="social-links">
+            <a href="#" class="social-link" aria-label="Instagram">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+            <a href="#" class="social-link" aria-label="Facebook">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a href="#" class="social-link" aria-label="WhatsApp">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="contact-form-wrap reveal-right">
+          <form class="contact-form" id="contactForm">
+            <div class="form-group">
+              <input type="text" id="name" name="name" required placeholder=" ">
+              <label for="name">Your Name</label>
+            </div>
+            <div class="form-group">
+              <input type="email" id="email" name="email" required placeholder=" ">
+              <label for="email">Your Email</label>
+            </div>
+            <div class="form-group">
+              <input type="text" id="subject" name="subject" placeholder=" ">
+              <label for="subject">Subject</label>
+            </div>
+            <div class="form-group">
+              <textarea id="message" name="message" rows="5" required placeholder=" "></textarea>
+              <label for="message">Your Message</label>
+            </div>
+            <button type="submit" class="btn btn-gold btn-full">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <img src="images/logo.jpeg" alt="Jewels by Iram" class="footer-logo">
+          <p>Handcrafted jewellery that celebrates elegance, tradition, and the art of fine design.</p>
+        </div>
+        <div class="footer-links">
+          <h4>Quick Links</h4>
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#collections">Collections</a>
+          <a href="#lookbook">Lookbook</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <div class="footer-links">
+          <h4>Collections</h4>
+          <a href="#collections">Necklaces</a>
+          <a href="#collections">Earrings</a>
+          <a href="#collections">Jewellery Sets</a>
+          <a href="#collections">Bridal Collection</a>
+          <a href="#collections">Bespoke Designs</a>
+        </div>
+        <div class="footer-newsletter">
+          <h4>Stay Updated</h4>
+          <p>Subscribe to receive updates on new collections and exclusive offers.</p>
+          <form class="newsletter-form">
+            <input type="email" placeholder="Your email address" required>
+            <button type="submit" class="btn btn-gold">Subscribe</button>
+          </form>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Jewels by Iram. All rights reserved.</p>
+        <p>Crafted with &#10084; for lovers of fine jewellery</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== LIGHTBOX ===== -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" aria-label="Close lightbox">&times;</button>
+    <button class="lightbox-prev" aria-label="Previous image">&#10094;</button>
+    <button class="lightbox-next" aria-label="Next image">&#10095;</button>
+    <div class="lightbox-content">
+      <img src="" alt="Jewellery preview" id="lightboxImg">
+    </div>
+  </div>
+
+  <!-- ===== BACK TO TOP ===== -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+
+  <script src="script.js"></script>
+</body>
+</html>
