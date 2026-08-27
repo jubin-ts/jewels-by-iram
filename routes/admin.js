@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs');
 const { getDb } = require('../database/db');
 const { requireAdmin } = require('../middleware/auth');
 const { generateOrderPDF } = require('../utils/pdf');
+const { UPLOADS_DIR } = require('../utils/uploadsPath');
 
 // CSRF validation middleware
 function validateCsrf(req, res, next) {
@@ -23,11 +24,10 @@ function validateCsrf(req, res, next) {
 // Multer configuration
 const storage = multer.diskStorage({
   destination: function (_req, _file, cb) {
-    const uploadDir = path.join(__dirname, '..', 'public', 'uploads');
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
+    if (!fs.existsSync(UPLOADS_DIR)) {
+              fs.mkdirSync(UPLOADS_DIR, { recursive: true });
     }
-    cb(null, uploadDir);
+          cb(null, UPLOADS_DIR);
   },
   filename: function (_req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -197,7 +197,7 @@ router.post('/products/delete/:id', requireAdmin, validateCsrf, (req, res) => {
 
   // Delete image files
   for (const img of images) {
-    const filePath = path.join(__dirname, '..', 'public', img.image_path);
+    const filePath = path.join(UPLOADS_DIR, path.basename(img.image_path));
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
@@ -215,7 +215,7 @@ router.post('/products/delete-image/:imageId', requireAdmin, validateCsrf, (req,
   const image = db.prepare('SELECT * FROM product_images WHERE id = ?').get(req.params.imageId);
 
   if (image) {
-    const filePath = path.join(__dirname, '..', 'public', image.image_path);
+    const filePath = path.join(UPLOADS_DIR, path.basename(image.image_path));
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
