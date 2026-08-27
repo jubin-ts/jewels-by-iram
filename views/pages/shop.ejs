@@ -1,0 +1,132 @@
+<%- include('../partials/header') %>
+
+<!-- Page Header -->
+<div class="page-header">
+  <div class="container">
+    <h1>Shop</h1>
+    <nav class="breadcrumbs">
+      <a href="/">Home</a>
+      <span class="separator"><i class="fas fa-chevron-right"></i></span>
+      <% if (currentCategory) { %>
+        <a href="/shop">Shop</a>
+        <span class="separator"><i class="fas fa-chevron-right"></i></span>
+        <span class="current"><%= categories.find(c => c.slug === currentCategory)?.name || currentCategory %></span>
+      <% } else { %>
+        <span class="current">Shop</span>
+      <% } %>
+    </nav>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="shop-layout">
+      <!-- Sidebar -->
+      <aside class="shop-sidebar">
+        <!-- Categories -->
+        <div class="filter-group">
+          <h4>Categories</h4>
+          <ul>
+            <li><a href="/shop" class="<%= !currentCategory ? 'active' : '' %>">All Jewelry</a></li>
+            <% categories.forEach(function(cat) { %>
+              <li>
+                <a href="/shop?category=<%= cat.slug %><%= currentSort ? '&sort=' + currentSort : '' %>" class="<%= currentCategory === cat.slug ? 'active' : '' %>">
+                  <%= cat.name %>
+                </a>
+              </li>
+            <% }); %>
+          </ul>
+        </div>
+
+        <!-- Price Range -->
+        <div class="filter-group">
+          <h4>Price Range</h4>
+          <form class="filter-form" method="GET" action="/shop">
+            <% if (currentCategory) { %>
+              <input type="hidden" name="category" value="<%= currentCategory %>">
+            <% } %>
+            <% if (currentSort) { %>
+              <input type="hidden" name="sort" value="<%= currentSort %>">
+            <% } %>
+            <div class="price-range">
+              <input type="number" name="min_price" placeholder="Min" value="<%= minPrice %>" aria-label="Minimum price">
+              <span>to</span>
+              <input type="number" name="max_price" placeholder="Max" value="<%= maxPrice %>" aria-label="Maximum price">
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm btn-block" style="margin-top: 0.75rem;">Apply Filter</button>
+          </form>
+        </div>
+      </aside>
+
+      <!-- Products -->
+      <div>
+        <div class="shop-toolbar">
+          <div class="shop-results">
+            Showing <strong><%= products.length %></strong> product<%= products.length !== 1 ? 's' : '' %>
+            <% if (searchQuery) { %> for "<strong><%= searchQuery %></strong>"<% } %>
+          </div>
+          <div class="shop-sort">
+            <select onchange="window.location.href=this.value" aria-label="Sort products">
+              <option value="/shop?<%= currentCategory ? 'category=' + currentCategory + '&' : '' %>sort=" <%= !currentSort ? 'selected' : '' %>>Default</option>
+              <option value="/shop?<%= currentCategory ? 'category=' + currentCategory + '&' : '' %>sort=newest" <%= currentSort === 'newest' ? 'selected' : '' %>>Newest First</option>
+              <option value="/shop?<%= currentCategory ? 'category=' + currentCategory + '&' : '' %>sort=price-low" <%= currentSort === 'price-low' ? 'selected' : '' %>>Price: Low to High</option>
+              <option value="/shop?<%= currentCategory ? 'category=' + currentCategory + '&' : '' %>sort=price-high" <%= currentSort === 'price-high' ? 'selected' : '' %>>Price: High to Low</option>
+              <option value="/shop?<%= currentCategory ? 'category=' + currentCategory + '&' : '' %>sort=name" <%= currentSort === 'name' ? 'selected' : '' %>>Name: A-Z</option>
+            </select>
+          </div>
+        </div>
+
+        <% if (products.length > 0) { %>
+          <div class="product-grid">
+            <% products.forEach(function(product) { %>
+              <div class="product-card">
+                <div class="product-card-image">
+                  <a href="/shop/<%= product.slug %>">
+                    <img src="<%= product.image %>" alt="<%= product.name %>">
+                  </a>
+                  <% if (product.category_name) { %>
+                    <span class="product-badge"><%= product.category_name %></span>
+                  <% } %>
+                  <% if (user) { %>
+                    <button class="wishlist-btn" data-product-id="<%= product.id %>" aria-label="Add to wishlist">
+                      <i class="far fa-heart"></i>
+                    </button>
+                  <% } %>
+                  <div class="product-card-overlay">
+                    <form class="add-to-cart-form" method="POST" action="/cart/add">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                      <input type="hidden" name="product_id" value="<%= product.id %>">
+                      <input type="hidden" name="quantity" value="1">
+                      <button type="submit" class="quick-add-btn"><i class="fas fa-shopping-bag"></i> Add to Cart</button>
+                    </form>
+                  </div>
+                </div>
+                <div class="product-card-body">
+                  <% if (product.category_name) { %>
+                    <div class="product-card-category"><%= product.category_name %></div>
+                  <% } %>
+                  <h3 class="product-card-name"><a href="/shop/<%= product.slug %>"><%= product.name %></a></h3>
+                  <div class="product-card-price">
+                    <span class="price-current">₹<%= product.price.toLocaleString('en-IN') %></span>
+                    <% if (product.original_price) { %>
+                      <span class="price-original">₹<%= product.original_price.toLocaleString('en-IN') %></span>
+                    <% } %>
+                  </div>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+        <% } else { %>
+          <div class="cart-empty">
+            <i class="fas fa-search" style="font-size: 4rem; color: var(--color-border); margin-bottom: 1.5rem;"></i>
+            <h2>No Products Found</h2>
+            <p>Try adjusting your filters or search to find what you're looking for.</p>
+            <a href="/shop" class="btn btn-primary">View All Products</a>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

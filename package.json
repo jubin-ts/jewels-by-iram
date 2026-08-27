@@ -1,0 +1,37 @@
+{
+  "name": "jewels-by-iram",
+  "version": "1.0.0",
+  "description": "jewels by iram website",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node db/seed.js",
+    "dev": "node --watch server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jubin-ts/jewels-by-iram.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jubin-ts/jewels-by-iram/issues"
+  },
+  "homepage": "https://github.com/jubin-ts/jewels-by-iram#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^12.9.0",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.7",
+    "csrf": "^3.1.0",
+    "dotenv": "^17.4.2",
+    "ejs": "^5.0.2",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "helmet": "^8.1.0",
+    "multer": "^2.1.1",
+    "uuid": "^13.0.0"
+  }
+}

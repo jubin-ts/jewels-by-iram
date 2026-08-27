@@ -1,0 +1,88 @@
+<%- include('../partials/header') %>
+
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-header">
+      <h3>Admin Panel</h3>
+      <p>Jewels by Iram</p>
+    </div>
+    <nav class="admin-nav">
+      <a href="/admin"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      <a href="/admin/products" class="active"><i class="fas fa-gem"></i> Products</a>
+      <a href="/admin/orders"><i class="fas fa-shopping-bag"></i> Orders</a>
+      <a href="/admin/messages"><i class="fas fa-envelope"></i> Messages</a>
+      <a href="/"><i class="fas fa-store"></i> View Store</a>
+    </nav>
+  </aside>
+
+  <!-- Content -->
+  <div class="admin-content">
+    <div class="admin-header">
+      <h1>Products</h1>
+      <a href="/admin/products/new" class="btn btn-primary"><i class="fas fa-plus"></i> Add New Product</a>
+    </div>
+
+    <div class="admin-table-card">
+      <div class="admin-table-header">
+        <h2>All Products (<%= products.length %>)</h2>
+      </div>
+      <% if (products && products.length > 0) { %>
+        <div class="admin-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% products.forEach(function(product) { %>
+                <tr>
+                  <td>
+                    <div class="product-thumb">
+                      <img src="<%= product.image %>" alt="<%= product.name %>">
+                    </div>
+                  </td>
+                  <td><strong><%= product.name %></strong></td>
+                  <td><%= product.category_name || 'Uncategorized' %></td>
+                  <td>₹<%= product.price.toLocaleString('en-IN') %></td>
+                  <td><%= product.stock %></td>
+                  <td>
+                    <% if (product.active) { %>
+                      <span class="badge badge-success">Active</span>
+                    <% } else { %>
+                      <span class="badge badge-danger">Inactive</span>
+                    <% } %>
+                    <% if (product.featured) { %><span class="badge badge-primary">Featured</span><% } %>
+                  </td>
+                  <td>
+                    <div class="admin-actions">
+                      <a href="/admin/products/<%= product.id %>/edit" class="btn btn-sm btn-secondary"><i class="fas fa-edit"></i> Edit</a>
+                      <form method="POST" action="/admin/products/<%= product.id %>/delete" class="delete-form" data-confirm-submit="Are you sure you want to delete this product? This action cannot be undone.">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <div style="text-align: center; padding: 3rem; color: var(--color-text-muted);">
+          <i class="fas fa-gem" style="font-size: 2.5rem; margin-bottom: 1rem; display: block;"></i>
+          <p>No products yet. <a href="/admin/products/new" style="color: var(--color-primary); font-weight: 600;">Add your first product!</a></p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

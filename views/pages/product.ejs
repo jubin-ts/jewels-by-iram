@@ -1,0 +1,246 @@
+<%- include('../partials/header') %>
+
+<!-- Page Header -->
+<div class="page-header">
+  <div class="container">
+    <nav class="breadcrumbs">
+      <a href="/">Home</a>
+      <span class="separator"><i class="fas fa-chevron-right"></i></span>
+      <a href="/shop">Shop</a>
+      <% if (product.category_name) { %>
+        <span class="separator"><i class="fas fa-chevron-right"></i></span>
+        <a href="/shop?category=<%= product.category_slug %>"><%= product.category_name %></a>
+      <% } %>
+      <span class="separator"><i class="fas fa-chevron-right"></i></span>
+      <span class="current"><%= product.name %></span>
+    </nav>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="product-detail">
+      <!-- Gallery -->
+      <div class="product-gallery">
+        <div class="product-gallery-main">
+          <img src="<%= product.image %>" alt="<%= product.name %>">
+        </div>
+        <% if (product.images) { %>
+          <div class="product-gallery-thumbs">
+            <img src="<%= product.image %>" alt="<%= product.name %>" class="active">
+            <% product.images.split(',').forEach(function(img) { if (img.trim()) { %>
+              <img src="<%= img.trim() %>" alt="<%= product.name %>">
+            <% } }); %>
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Product Info -->
+      <div class="product-info">
+        <% if (product.category_name) { %>
+          <a href="/shop?category=<%= product.category_slug %>" class="product-info-category"><%= product.category_name %></a>
+        <% } %>
+
+        <h1><%= product.name %></h1>
+
+        <!-- Rating -->
+        <% if (reviewCount > 0) { %>
+          <div class="product-rating" style="margin-bottom: 1rem;">
+            <% for (var i = 1; i <= 5; i++) { %>
+              <i class="<%= i <= Math.round(avgRating) ? 'fas' : 'far' %> fa-star star <%= i <= Math.round(avgRating) ? '' : 'empty' %>"></i>
+            <% } %>
+            <span class="count">(<%= reviewCount %> review<%= reviewCount !== 1 ? 's' : '' %>)</span>
+          </div>
+        <% } %>
+
+        <div class="product-info-price">
+          <span class="price-current">₹<%= product.price.toLocaleString('en-IN') %></span>
+          <% if (product.original_price) { %>
+            <span class="price-original">₹<%= product.original_price.toLocaleString('en-IN') %></span>
+            <span class="price-discount"><%= Math.round((1 - product.price / product.original_price) * 100) %>% OFF</span>
+          <% } %>
+        </div>
+
+        <% if (product.description) { %>
+          <p class="product-info-description"><%= product.description %></p>
+        <% } %>
+
+        <!-- Stock Status -->
+        <% if (product.stock > 0) { %>
+          <div class="stock-status in-stock">
+            <span class="stock-dot"></span>
+            In Stock (<%= product.stock %> available)
+          </div>
+        <% } else { %>
+          <div class="stock-status out-of-stock">
+            <span class="stock-dot"></span>
+            Out of Stock
+          </div>
+        <% } %>
+
+        <!-- Add to Cart -->
+        <form class="add-to-cart-form" method="POST" action="/cart/add">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <input type="hidden" name="product_id" value="<%= product.id %>">
+          <div class="product-actions">
+            <div class="quantity-selector">
+              <button type="button" aria-label="Decrease quantity">−</button>
+              <input type="number" name="quantity" value="1" min="1" max="<%= product.stock %>" aria-label="Quantity">
+              <button type="button" aria-label="Increase quantity">+</button>
+            </div>
+            <button type="submit" class="btn btn-primary" <%= product.stock <= 0 ? 'disabled' : '' %>>
+              <i class="fas fa-shopping-bag"></i> Add to Cart
+            </button>
+            <button type="button" class="product-wishlist-btn <%= inWishlist ? 'active' : '' %>" data-product-id="<%= product.id %>" aria-label="<%= inWishlist ? 'Remove from' : 'Add to' %> wishlist">
+              <i class="<%= inWishlist ? 'fas' : 'far' %> fa-heart"></i>
+            </button>
+          </div>
+        </form>
+
+        <!-- WhatsApp Order -->
+        <a href="#" class="btn btn-success btn-block whatsapp-order-btn" data-whatsapp="<%= whatsappNumber %>" data-product="<%= product.name %>" data-price="<%= product.price %>" style="margin-bottom: 2rem;">
+          <i class="fab fa-whatsapp"></i> Order via WhatsApp
+        </a>
+
+        <!-- Product Meta -->
+        <div class="product-meta">
+          <% if (product.material) { %>
+            <div class="product-meta-item">
+              <strong>Material:</strong>
+              <span><%= product.material %></span>
+            </div>
+          <% } %>
+          <% if (product.weight) { %>
+            <div class="product-meta-item">
+              <strong>Weight:</strong>
+              <span><%= product.weight %></span>
+            </div>
+          <% } %>
+          <div class="product-meta-item">
+            <strong>Category:</strong>
+            <span><%= product.category_name || 'Uncategorized' %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="product-tabs">
+      <div class="product-tabs-nav">
+        <button class="active" data-tab="tab-description">Description</button>
+        <button data-tab="tab-reviews">Reviews (<%= reviewCount %>)</button>
+      </div>
+
+      <div id="tab-description" class="product-tab-content active">
+        <% if (product.description) { %>
+          <p><%= product.description %></p>
+        <% } else { %>
+          <p>No description available for this product.</p>
+        <% } %>
+        <% if (product.material) { %>
+          <p><strong>Material:</strong> <%= product.material %></p>
+        <% } %>
+        <% if (product.weight) { %>
+          <p><strong>Weight:</strong> <%= product.weight %></p>
+        <% } %>
+      </div>
+
+      <div id="tab-reviews" class="product-tab-content">
+        <% if (reviews.length > 0) { %>
+          <div class="reviews-list">
+            <% reviews.forEach(function(review) { %>
+              <div class="review-card">
+                <div class="review-header">
+                  <span class="review-author"><%= review.user_name %></span>
+                  <span class="review-date"><%= new Date(review.created_at).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+                </div>
+                <div class="review-rating">
+                  <% for (var i = 1; i <= 5; i++) { %>
+                    <i class="<%= i <= review.rating ? 'fas' : 'far' %> fa-star"></i>
+                  <% } %>
+                </div>
+                <% if (review.comment) { %>
+                  <p class="review-text"><%= review.comment %></p>
+                <% } %>
+              </div>
+            <% }); %>
+          </div>
+        <% } else { %>
+          <p class="text-muted">No reviews yet. Be the first to review this product!</p>
+        <% } %>
+
+        <!-- Add Review Form -->
+        <% if (user) { %>
+          <div class="review-form">
+            <h4>Write a Review</h4>
+            <form id="review-form">
+              <input type="hidden" name="product_id" value="<%= product.id %>">
+              <div class="form-group">
+                <label>Rating <span class="required">*</span></label>
+                <div class="star-rating">
+                  <input type="radio" name="rating" id="star5" value="5"><label for="star5"><i class="fas fa-star"></i></label>
+                  <input type="radio" name="rating" id="star4" value="4"><label for="star4"><i class="fas fa-star"></i></label>
+                  <input type="radio" name="rating" id="star3" value="3"><label for="star3"><i class="fas fa-star"></i></label>
+                  <input type="radio" name="rating" id="star2" value="2"><label for="star2"><i class="fas fa-star"></i></label>
+                  <input type="radio" name="rating" id="star1" value="1"><label for="star1"><i class="fas fa-star"></i></label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="review-comment">Your Review</label>
+                <textarea id="review-comment" name="comment" class="form-control" rows="4" placeholder="Share your experience with this product..."></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit Review</button>
+            </form>
+          </div>
+        <% } else { %>
+          <div class="review-form" style="text-align: center; padding: 2rem;">
+            <p>Please <a href="/login" style="color: var(--color-primary); font-weight: 600;">login</a> to write a review.</p>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Related Products -->
+    <% if (related && related.length > 0) { %>
+      <div class="related-products">
+        <h3>You May Also Like</h3>
+        <div class="product-grid">
+          <% related.forEach(function(rp) { %>
+            <div class="product-card">
+              <div class="product-card-image">
+                <a href="/shop/<%= rp.slug %>">
+                  <img src="<%= rp.image %>" alt="<%= rp.name %>">
+                </a>
+                <% if (user) { %>
+                  <button class="wishlist-btn" data-product-id="<%= rp.id %>" aria-label="Add to wishlist">
+                    <i class="far fa-heart"></i>
+                  </button>
+                <% } %>
+                <div class="product-card-overlay">
+                  <form class="add-to-cart-form" method="POST" action="/cart/add">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <input type="hidden" name="product_id" value="<%= rp.id %>">
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="quick-add-btn"><i class="fas fa-shopping-bag"></i> Add to Cart</button>
+                  </form>
+                </div>
+              </div>
+              <div class="product-card-body">
+                <div class="product-card-category"><%= rp.category_name %></div>
+                <h3 class="product-card-name"><a href="/shop/<%= rp.slug %>"><%= rp.name %></a></h3>
+                <div class="product-card-price">
+                  <span class="price-current">₹<%= rp.price.toLocaleString('en-IN') %></span>
+                  <% if (rp.original_price) { %>
+                    <span class="price-original">₹<%= rp.original_price.toLocaleString('en-IN') %></span>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

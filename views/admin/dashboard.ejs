@@ -1,0 +1,119 @@
+<%- include('../partials/header') %>
+
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-header">
+      <h3>Admin Panel</h3>
+      <p>Jewels by Iram</p>
+    </div>
+    <nav class="admin-nav">
+      <a href="/admin" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      <a href="/admin/products"><i class="fas fa-gem"></i> Products</a>
+      <a href="/admin/orders"><i class="fas fa-shopping-bag"></i> Orders</a>
+      <a href="/admin/messages"><i class="fas fa-envelope"></i> Messages <% if (totalMessages > 0) { %><span class="badge badge-danger" style="margin-left: auto;"><%= totalMessages %></span><% } %></a>
+      <a href="/"><i class="fas fa-store"></i> View Store</a>
+    </nav>
+  </aside>
+
+  <!-- Content -->
+  <div class="admin-content">
+    <div class="admin-header">
+      <h1>Dashboard</h1>
+      <p class="text-muted">Welcome back, <%= user.name %>!</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon gold">
+          <i class="fas fa-gem"></i>
+        </div>
+        <div class="stat-info">
+          <h3><%= totalProducts %></h3>
+          <p>Total Products</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green">
+          <i class="fas fa-shopping-bag"></i>
+        </div>
+        <div class="stat-info">
+          <h3><%= totalOrders %></h3>
+          <p>Total Orders</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon blue">
+          <i class="fas fa-rupee-sign"></i>
+        </div>
+        <div class="stat-info">
+          <h3>₹<%= totalRevenue.toLocaleString('en-IN') %></h3>
+          <p>Total Revenue</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon gold">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-info">
+          <h3><%= totalUsers %></h3>
+          <p>Customers</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon red">
+          <i class="fas fa-envelope"></i>
+        </div>
+        <div class="stat-info">
+          <h3><%= totalMessages %></h3>
+          <p>Unread Messages</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="admin-table-card">
+      <div class="admin-table-header">
+        <h2>Recent Orders</h2>
+        <a href="/admin/orders" class="btn btn-sm btn-secondary">View All</a>
+      </div>
+      <% if (recentOrders && recentOrders.length > 0) { %>
+        <div class="admin-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Order #</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% recentOrders.forEach(function(order) { %>
+                <tr>
+                  <td><strong><%= order.order_number %></strong></td>
+                  <td><%= order.customer_name %></td>
+                  <td><%= new Date(order.created_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' }) %></td>
+                  <td>₹<%= order.total.toLocaleString('en-IN') %></td>
+                  <td><span class="status-badge <%= order.status %>"><%= order.status %></span></td>
+                  <td>
+                    <a href="/admin/orders/<%= order.id %>" class="btn btn-sm btn-secondary">View</a>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <div style="text-align: center; padding: 3rem; color: var(--color-text-muted);">
+          <p>No orders yet.</p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

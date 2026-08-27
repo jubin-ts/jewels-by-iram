@@ -1,0 +1,102 @@
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Brand -->
+        <div class="footer-brand">
+          <a href="/" class="logo">
+            <img src="/images/logo.jpeg" alt="Jewels by Iram">
+            <span class="logo-text">Jewels by <span>Iram</span></span>
+          </a>
+          <p>Discover exquisite handcrafted jewelry that celebrates elegance and tradition. Each piece is crafted with love, precision, and the finest materials to make every moment special.</p>
+          <div class="social-icons">
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest-p"></i></a>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div>
+          <h4>Quick Links</h4>
+          <div class="footer-links">
+            <a href="/">Home</a>
+            <a href="/shop">Shop</a>
+            <a href="/about">About Us</a>
+            <a href="/contact">Contact</a>
+            <a href="/login">My Account</a>
+          </div>
+        </div>
+
+        <!-- Categories -->
+        <div>
+          <h4>Categories</h4>
+          <div class="footer-links">
+            <a href="/shop?category=necklaces">Necklaces</a>
+            <a href="/shop?category=earrings">Earrings</a>
+            <a href="/shop?category=rings">Rings</a>
+            <a href="/shop?category=bracelets">Bracelets</a>
+            <a href="/shop?category=pendants">Pendants</a>
+            <a href="/shop?category=sets">Jewelry Sets</a>
+          </div>
+        </div>
+
+        <!-- Contact Info -->
+        <div>
+          <h4>Contact Info</h4>
+          <div class="footer-links">
+            <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-bottom: 0.5rem;">
+              <i class="fas fa-map-marker-alt" style="color: var(--color-primary); margin-right: 0.5rem;"></i>
+              Mumbai, Maharashtra, India
+            </p>
+            <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-bottom: 0.5rem;">
+              <i class="fas fa-phone" style="color: var(--color-primary); margin-right: 0.5rem;"></i>
+              +91 98765 43210
+            </p>
+            <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-bottom: 0.5rem;">
+              <i class="fas fa-envelope" style="color: var(--color-primary); margin-right: 0.5rem;"></i>
+              hello@jewelsbyiram.com
+            </p>
+            <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">
+              <i class="fas fa-clock" style="color: var(--color-primary); margin-right: 0.5rem;"></i>
+              Mon - Sat: 10AM - 7PM
+            </p>
+          </div>
+          <div class="footer-newsletter" style="margin-top: 1rem;">
+            <p>Subscribe to our newsletter</p>
+            <form class="newsletter-form" action="/newsletter" method="POST">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <input type="email" name="email" placeholder="Your email" aria-label="Email for newsletter" required>
+              <button type="submit">Subscribe</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; <%= new Date().getFullYear() %> Jewels by Iram. All rights reserved.</p>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms &amp; Conditions</a>
+          <a href="#">Shipping Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- WhatsApp Floating Button -->
+  <a href="https://wa.me/<%= whatsappNumber %>?text=Hi!%20I%27m%20interested%20in%20your%20jewelry%20collection." class="whatsapp-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <!-- Back to Top -->
+  <button class="back-to-top" aria-label="Back to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

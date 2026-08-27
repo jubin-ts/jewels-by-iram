@@ -1,0 +1,90 @@
+<%- include('../partials/header') %>
+
+<div class="cart-page">
+  <div class="container">
+    <h1>Shopping Cart</h1>
+
+    <% if (items && items.length > 0) { %>
+      <div class="cart-layout">
+        <!-- Cart Items -->
+        <div class="cart-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% items.forEach(function(item) { %>
+                <tr data-item-id="<%= item.id %>">
+                  <td>
+                    <div class="cart-item-info">
+                      <div class="cart-item-image">
+                        <a href="/shop/<%= item.slug %>">
+                          <img src="<%= item.image %>" alt="<%= item.name %>">
+                        </a>
+                      </div>
+                      <div>
+                        <div class="cart-item-name"><a href="/shop/<%= item.slug %>"><%= item.name %></a></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="cart-item-price" data-price="<%= item.price %>">₹<%= item.price.toLocaleString('en-IN') %></span>
+                  </td>
+                  <td>
+                    <div class="cart-quantity">
+                      <button class="quantity-btn quantity-minus" data-action="minus" aria-label="Decrease quantity">−</button>
+                      <input type="number" class="quantity-input" name="quantity" value="<%= item.quantity %>" min="1" max="<%= item.stock %>" aria-label="Quantity">
+                      <button class="quantity-btn quantity-plus" data-action="plus" aria-label="Increase quantity">+</button>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="cart-item-total line-total">₹<%= (item.price * item.quantity).toLocaleString('en-IN') %></span>
+                  </td>
+                  <td>
+                    <button class="cart-remove-btn remove-item-btn" data-item-id="<%= item.id %>" aria-label="Remove item">
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Cart Summary -->
+        <div class="cart-summary">
+          <h3>Order Summary</h3>
+          <div class="cart-summary-row">
+            <span>Subtotal</span>
+            <span class="cart-total-amount cart-total">₹<%= total.toLocaleString('en-IN') %></span>
+          </div>
+          <div class="cart-summary-row">
+            <span>Shipping</span>
+            <span style="color: var(--color-success); font-weight: 600;">Free</span>
+          </div>
+          <div class="cart-summary-row total">
+            <span>Total</span>
+            <span class="cart-total-amount cart-total">₹<%= total.toLocaleString('en-IN') %></span>
+          </div>
+          <a href="/cart/checkout" class="btn btn-primary btn-block">Proceed to Checkout</a>
+          <a href="/shop" class="btn btn-secondary btn-block" style="margin-top: 0.75rem;">Continue Shopping</a>
+        </div>
+      </div>
+    <% } else { %>
+      <div class="cart-empty">
+        <i class="fas fa-shopping-bag"></i>
+        <h2>Your Cart is Empty</h2>
+        <p>Looks like you haven't added any jewelry to your cart yet. Start exploring our beautiful collection!</p>
+        <a href="/shop" class="btn btn-primary btn-lg">Start Shopping</a>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

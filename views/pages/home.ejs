@@ -1,0 +1,268 @@
+<%- include('../partials/header') %>
+
+<!-- Hero Section -->
+<section class="hero" style="background-image: url('/images/products/set-bridal-gold-1.jpeg');">
+  <div class="hero-content">
+    <h1>Exquisite <span>Handcrafted</span> Jewelry</h1>
+    <p>Discover timeless elegance with our curated collection of fine jewelry, handcrafted with love and precision for the modern woman.</p>
+    <div class="hero-cta">
+      <a href="/shop" class="btn btn-primary btn-lg">Shop Now</a>
+      <a href="/about" class="btn btn-outline btn-lg">Our Story</a>
+    </div>
+  </div>
+</section>
+
+<!-- Category Showcase -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Shop by Category</h2>
+      <p>Explore our diverse collection of handcrafted jewelry for every occasion</p>
+    </div>
+    <div class="categories-grid">
+      <% categories.forEach(function(cat) { %>
+        <a href="/shop?category=<%= cat.slug %>" class="category-card">
+          <img src="<%= cat.image || '/images/products/necklace-gold-traditional-1.jpeg' %>" alt="<%= cat.name %>">
+          <div class="category-card-overlay">
+            <span class="category-card-name"><%= cat.name %></span>
+          </div>
+        </a>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Collection -->
+<% if (featured && featured.length > 0) { %>
+<section class="section" style="background: var(--color-white);">
+  <div class="container">
+    <div class="section-header">
+      <h2>Featured Collection</h2>
+      <p>Our most loved pieces, handpicked for you</p>
+    </div>
+    <div class="product-grid">
+      <% featured.forEach(function(product) { %>
+        <div class="product-card">
+          <div class="product-card-image">
+            <a href="/shop/<%= product.slug %>">
+              <img src="<%= product.image %>" alt="<%= product.name %>">
+            </a>
+            <span class="product-badge">Featured</span>
+            <% if (user) { %>
+              <button class="wishlist-btn" data-product-id="<%= product.id %>" aria-label="Add to wishlist">
+                <i class="far fa-heart"></i>
+              </button>
+            <% } %>
+            <div class="product-card-overlay">
+              <form class="add-to-cart-form" method="POST" action="/cart/add">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="hidden" name="product_id" value="<%= product.id %>">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="quick-add-btn"><i class="fas fa-shopping-bag"></i> Add to Cart</button>
+              </form>
+            </div>
+          </div>
+          <div class="product-card-body">
+            <div class="product-card-category"><%= product.category_name %></div>
+            <h3 class="product-card-name"><a href="/shop/<%= product.slug %>"><%= product.name %></a></h3>
+            <div class="product-card-price">
+              <span class="price-current">₹<%= product.price.toLocaleString('en-IN') %></span>
+              <% if (product.original_price) { %>
+                <span class="price-original">₹<%= product.original_price.toLocaleString('en-IN') %></span>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<!-- New Arrivals -->
+<% if (newArrivals && newArrivals.length > 0) { %>
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2>New Arrivals</h2>
+      <p>The latest additions to our collection</p>
+    </div>
+    <div class="product-grid">
+      <% newArrivals.forEach(function(product) { %>
+        <div class="product-card">
+          <div class="product-card-image">
+            <a href="/shop/<%= product.slug %>">
+              <img src="<%= product.image %>" alt="<%= product.name %>">
+            </a>
+            <span class="product-badge new">New</span>
+            <% if (user) { %>
+              <button class="wishlist-btn" data-product-id="<%= product.id %>" aria-label="Add to wishlist">
+                <i class="far fa-heart"></i>
+              </button>
+            <% } %>
+            <div class="product-card-overlay">
+              <form class="add-to-cart-form" method="POST" action="/cart/add">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="hidden" name="product_id" value="<%= product.id %>">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="quick-add-btn"><i class="fas fa-shopping-bag"></i> Add to Cart</button>
+              </form>
+            </div>
+          </div>
+          <div class="product-card-body">
+            <div class="product-card-category"><%= product.category_name %></div>
+            <h3 class="product-card-name"><a href="/shop/<%= product.slug %>"><%= product.name %></a></h3>
+            <div class="product-card-price">
+              <span class="price-current">₹<%= product.price.toLocaleString('en-IN') %></span>
+              <% if (product.original_price) { %>
+                <span class="price-original">₹<%= product.original_price.toLocaleString('en-IN') %></span>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<!-- Best Sellers -->
+<% if (bestSellers && bestSellers.length > 0) { %>
+<section class="section" style="background: var(--color-white);">
+  <div class="container">
+    <div class="section-header">
+      <h2>Best Sellers</h2>
+      <p>Our customers' most loved pieces</p>
+    </div>
+    <div class="product-grid">
+      <% bestSellers.forEach(function(product) { %>
+        <div class="product-card">
+          <div class="product-card-image">
+            <a href="/shop/<%= product.slug %>">
+              <img src="<%= product.image %>" alt="<%= product.name %>">
+            </a>
+            <span class="product-badge sale">Popular</span>
+            <% if (user) { %>
+              <button class="wishlist-btn" data-product-id="<%= product.id %>" aria-label="Add to wishlist">
+                <i class="far fa-heart"></i>
+              </button>
+            <% } %>
+            <div class="product-card-overlay">
+              <form class="add-to-cart-form" method="POST" action="/cart/add">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="hidden" name="product_id" value="<%= product.id %>">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="quick-add-btn"><i class="fas fa-shopping-bag"></i> Add to Cart</button>
+              </form>
+            </div>
+          </div>
+          <div class="product-card-body">
+            <div class="product-card-category"><%= product.category_name %></div>
+            <h3 class="product-card-name"><a href="/shop/<%= product.slug %>"><%= product.name %></a></h3>
+            <div class="product-card-price">
+              <span class="price-current">₹<%= product.price.toLocaleString('en-IN') %></span>
+              <% if (product.original_price) { %>
+                <span class="price-original">₹<%= product.original_price.toLocaleString('en-IN') %></span>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<!-- Why Choose Us -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Why Choose Us</h2>
+      <p>We take pride in delivering the finest jewelry experience</p>
+    </div>
+    <div class="values-grid">
+      <div class="value-card fade-in">
+        <div class="value-card-icon">
+          <i class="fas fa-gem"></i>
+        </div>
+        <h4>Handcrafted</h4>
+        <p>Every piece is meticulously handcrafted by skilled artisans with years of experience in traditional jewelry making.</p>
+      </div>
+      <div class="value-card fade-in">
+        <div class="value-card-icon">
+          <i class="fas fa-certificate"></i>
+        </div>
+        <h4>Certified Quality</h4>
+        <p>All our jewelry comes with authenticity certificates and quality guarantees for your complete peace of mind.</p>
+      </div>
+      <div class="value-card fade-in">
+        <div class="value-card-icon">
+          <i class="fas fa-truck"></i>
+        </div>
+        <h4>Free Shipping</h4>
+        <p>Enjoy free insured shipping on all orders across India with secure packaging and timely delivery.</p>
+      </div>
+      <div class="value-card fade-in">
+        <div class="value-card-icon">
+          <i class="fas fa-undo-alt"></i>
+        </div>
+        <h4>Easy Returns</h4>
+        <p>Not satisfied? Return within 7 days for a full refund. No questions asked, hassle-free returns.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="section" style="background: var(--color-white);">
+  <div class="container">
+    <div class="section-header">
+      <h2>What Our Customers Say</h2>
+      <p>Hear from the women who wear our creations</p>
+    </div>
+    <div class="values-grid">
+      <div class="review-card">
+        <div class="review-header">
+          <span class="review-author">Priya Sharma</span>
+        </div>
+        <div class="review-rating">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+        </div>
+        <p class="review-text">"Absolutely stunning jewelry! The craftsmanship is impeccable and the designs are so unique. I received so many compliments on my wedding day."</p>
+      </div>
+      <div class="review-card">
+        <div class="review-header">
+          <span class="review-author">Aisha Khan</span>
+        </div>
+        <div class="review-rating">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+        </div>
+        <p class="review-text">"Beautiful collection and amazing quality. The packaging was luxurious and the jewelry arrived in perfect condition. Highly recommend!"</p>
+      </div>
+      <div class="review-card">
+        <div class="review-header">
+          <span class="review-author">Ritu Patel</span>
+        </div>
+        <div class="review-rating">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+        </div>
+        <p class="review-text">"I ordered a set for my anniversary and it was perfect. The customer service was excellent and they helped me choose the right design."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Newsletter -->
+<section class="section" style="background: var(--color-black); color: var(--color-white); text-align: center;">
+  <div class="container-narrow">
+    <h2 style="color: var(--color-white); margin-bottom: 0.5rem;">Stay in Touch</h2>
+    <p style="color: rgba(255,255,255,0.7); margin-bottom: 2rem;">Subscribe to get exclusive offers, new arrival updates, and styling tips delivered to your inbox.</p>
+    <form class="newsletter-form" method="POST" action="/newsletter" style="max-width: 480px; margin: 0 auto;">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="email" name="email" placeholder="Enter your email address" required aria-label="Email for newsletter">
+      <button type="submit">Subscribe</button>
+    </form>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

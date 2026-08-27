@@ -1,0 +1,115 @@
+<%- include('../partials/header') %>
+
+<div class="order-confirmation">
+  <div class="container">
+    <!-- Success Header -->
+    <div class="order-success-header">
+      <div class="order-success-icon">
+        <i class="fas fa-check"></i>
+      </div>
+      <h1>Order Confirmed!</h1>
+      <p>Thank you for your order. We'll send you a confirmation email shortly.</p>
+      <div class="order-number"><%= order.order_number %></div>
+    </div>
+
+    <!-- Order Info -->
+    <div class="order-details-card">
+      <h3>Order Details</h3>
+      <div class="order-info-grid">
+        <div class="order-info-item">
+          <span class="order-info-label">Order Number</span>
+          <span class="order-info-value"><%= order.order_number %></span>
+        </div>
+        <div class="order-info-item">
+          <span class="order-info-label">Date</span>
+          <span class="order-info-value"><%= new Date(order.created_at).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+        </div>
+        <div class="order-info-item">
+          <span class="order-info-label">Status</span>
+          <span class="order-info-value"><span class="status-badge <%= order.status %>"><%= order.status %></span></span>
+        </div>
+        <div class="order-info-item">
+          <span class="order-info-label">Payment Method</span>
+          <span class="order-info-value"><%= order.payment_method === 'cod' ? 'Cash on Delivery' : 'WhatsApp Order' %></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Items -->
+    <div class="order-details-card">
+      <h3>Items Ordered</h3>
+      <table class="order-items-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% items.forEach(function(item) { %>
+            <tr>
+              <td>
+                <div class="cart-item-info">
+                  <% if (item.product_image) { %>
+                    <div class="cart-item-image">
+                      <img src="<%= item.product_image %>" alt="<%= item.product_name %>">
+                    </div>
+                  <% } %>
+                  <span class="cart-item-name"><%= item.product_name %></span>
+                </div>
+              </td>
+              <td>₹<%= item.price.toLocaleString('en-IN') %></td>
+              <td><%= item.quantity %></td>
+              <td><strong>₹<%= (item.price * item.quantity).toLocaleString('en-IN') %></strong></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <div style="text-align: right; margin-top: 1rem; padding-top: 1rem; border-top: 2px solid var(--color-border);">
+        <span style="font-size: 1.2rem; font-weight: 700;">Total: ₹<%= order.total.toLocaleString('en-IN') %></span>
+      </div>
+    </div>
+
+    <!-- Shipping Info -->
+    <div class="order-details-card">
+      <h3>Shipping Information</h3>
+      <div class="order-info-grid">
+        <div class="order-info-item">
+          <span class="order-info-label">Name</span>
+          <span class="order-info-value"><%= order.customer_name %></span>
+        </div>
+        <div class="order-info-item">
+          <span class="order-info-label">Email</span>
+          <span class="order-info-value"><%= order.customer_email %></span>
+        </div>
+        <div class="order-info-item">
+          <span class="order-info-label">Phone</span>
+          <span class="order-info-value"><%= order.customer_phone %></span>
+        </div>
+        <div class="order-info-item">
+          <span class="order-info-label">Address</span>
+          <span class="order-info-value">
+            <%= order.shipping_address %>
+            <% if (order.city) { %>, <%= order.city %><% } %>
+            <% if (order.pincode) { %> - <%= order.pincode %><% } %>
+          </span>
+        </div>
+      </div>
+      <% if (order.notes) { %>
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--color-border-light);">
+          <span class="order-info-label">Order Notes</span>
+          <p style="margin-top: 0.25rem; color: var(--color-text-light);"><%= order.notes %></p>
+        </div>
+      <% } %>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+      <a href="/shop" class="btn btn-primary btn-lg">Continue Shopping</a>
+      <a href="/profile" class="btn btn-secondary btn-lg" style="margin-left: 1rem;">My Orders</a>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
