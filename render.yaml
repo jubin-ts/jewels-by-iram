@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: jewels-by-iram
+    runtime: node
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: DATABASE_PATH
+        value: /opt/render/project/src/data/jewels.db
+    - key: UPLOADS_PATH
+      value: /opt/render/project/src/data/uploads
+    disk:
+      name: data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1

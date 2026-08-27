@@ -1,0 +1,32 @@
+{
+  "name": "jewels-by-iram",
+  "version": "1.0.0",
+  "description": "Luxury anti-tarnish jewelry brand website - Jewels by Iram",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "seed": "node seeds/seed.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "jewelry",
+    "e-commerce",
+    "luxury"
+  ],
+  "author": "Jewels by Iram",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.7.0",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "express-rate-limit": "^8.3.2",
+    "express-session": "^1.18.1",
+    "multer": "^2.1.1",
+    "pdfkit": "^0.18.0",
+    "uuid": "^11.0.3"
+  }
+}
