@@ -5,7 +5,12 @@ const bcrypt = require('bcryptjs');
 let db;
 
 function initDatabase() {
-  const dbPath = process.env.DATABASE_PATH || path.join(__dirname, '..', 'jewels.db');
+  // Vercel's deployment bundle is read-only outside of /tmp, so better-sqlite3
+  // can't open a file next to the source there. Fall back to /tmp (note: it's
+  // wiped between invocations, so data doesn't persist unless DATABASE_PATH
+  // points at real persistent storage).
+  const dbPath = process.env.DATABASE_PATH
+    || (process.env.VERCEL ? '/tmp/jewels.db' : path.join(__dirname, '..', 'jewels.db'));
   db = new Database(dbPath);
 
   // Enable WAL mode for better performance

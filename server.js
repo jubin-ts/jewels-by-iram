@@ -56,16 +56,20 @@ const authLimiter = rateLimit({
   message: 'Too many login attempts, please try again later.',
 });
 
-app.use(generalLimiter);
-
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Serve static assets before the rate limiter: a single page view pulls in
+// many CSS/JS/image requests, and counting each of those against the limit
+// let normal browsing exhaust it and start returning 429s for images.
 app.use(express.static(path.join(__dirname, 'public')));
 if (!fs.existsSync(UPLOADS_DIR)) {
     fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 }
 app.use('/uploads', express.static(UPLOADS_DIR));
+
+app.use(generalLimiter);
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Generate a random session secret if not provided
 const sessionSecret = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
@@ -139,8 +143,12 @@ app.use((err, req, res, _next) => {
   res.status(500).render('error', { title: 'Error', message: 'Something went wrong!' });
 });
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Jewels by Iram server running on port ${PORT}`);
-});
+// Vercel imports this module and calls the exported handler directly rather
+// than running a long-lived process, so only listen when run directly.
+if (require.main === module) {
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Jewels by Iram server running on port ${PORT}`);
+  });
+}
 
 module.exports = app;
