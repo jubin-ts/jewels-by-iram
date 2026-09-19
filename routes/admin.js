@@ -1,13 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const { getDb } = require('../database/db');
 const { requireAdmin } = require('../middleware/auth');
 const { generateOrderPDF } = require('../utils/pdf');
-const { UPLOADS_DIR } = require('../utils/uploadsPath');
+const { saveImage, deleteImage } = require('../utils/imageStore');
 
 // CSRF validation middleware
 function validateCsrf(req, res, next) {
@@ -21,19 +19,9 @@ function validateCsrf(req, res, next) {
   next();
 }
 
-// Multer configuration
-const storage = multer.diskStorage({
-  destination: function (_req, _file, cb) {
-    if (!fs.existsSync(UPLOADS_DIR)) {
-              fs.mkdirSync(UPLOADS_DIR, { recursive: true });
-    }
-          cb(null, UPLOADS_DIR);
-  },
-  filename: function (_req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
-  }
-});
+// Multer configuration - files are held in memory so imageStore.js can hand
+// them to Vercel Blob (or write them to disk locally); see utils/imageStore.js.
+const storage = multer.memoryStorage();
 
 const fileFilter = (_req, file, cb) => {
   const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
@@ -135,103 +123,118 @@ router.get('/products/edit/:id', requireAdmin, (req, res) => {
 });
 
 // Create product
-router.post('/products/create', requireAdmin, upload.array('images', 10), validateCsrf, (req, res) => {
-  const db = getDb();
-  const { name, description, price, wholesale_price, category_id, featured, in_stock } = req.body;
+router.post('/products/create', requireAdmin, upload.array('images', 10), validateCsrf, async (req, res, next) => {
+  try {
+    const db = getDb();
+    const { name, description, price, wholesale_price, category_id, featured, in_stock } = req.body;
 
-  const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + Date.now().toString(36);
+    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + Date.now().toString(36);
 
-  const result = db.prepare(`
-    INSERT INTO products (name, slug, description, price, wholesale_price, category_id, featured, in_stock)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-  `).run(name, slug, description || '', parseFloat(price), wholesale_price ? parseFloat(wholesale_price) : null, parseInt(category_id, 10), featured ? 1 : 0, in_stock !== undefined ? (in_stock ? 1 : 0) : 1);
+    const result = db.prepare(`
+      INSERT INTO products (name, slug, description, price, wholesale_price, category_id, featured, in_stock)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(name, slug, description || '', parseFloat(price), wholesale_price ? parseFloat(wholesale_price) : null, parseInt(category_id, 10), featured ? 1 : 0, in_stock !== undefined ? (in_stock ? 1 : 0) : 1);
 
-  const productId = result.lastInsertRowid;
+    const productId = result.lastInsertRowid;
 
-  // Save images
-  if (req.files && req.files.length > 0) {
-    const insertImage = db.prepare('INSERT INTO product_images (product_id, image_path, is_primary, display_order) VALUES (?, ?, ?, ?)');
-    req.files.forEach((file, index) => {
-      insertImage.run(productId, '/uploads/' + file.filename, index === 0 ? 1 : 0, index);
-    });
+    // Save images
+    if (req.files && req.files.length > 0) {
+      const insertImage = db.prepare('INSERT INTO product_images (product_id, image_path, is_primary, display_order) VALUES (?, ?, ?, ?)');
+      let index = 0;
+      for (const file of req.files) {
+        const imagePath = await saveImage(file);
+        insertImage.run(productId, imagePath, index === 0 ? 1 : 0, index);
+        index++;
+      }
+    }
+
+    res.redirect('/admin/products');
+  } catch (err) {
+    next(err);
   }
-
-  res.redirect('/admin/products');
 });
 
 // Update product
-router.post('/products/update/:id', requireAdmin, upload.array('images', 10), validateCsrf, (req, res) => {
-  const db = getDb();
-  const { name, description, price, wholesale_price, category_id, featured, in_stock } = req.body;
-  const productId = req.params.id;
+router.post('/products/update/:id', requireAdmin, upload.array('images', 10), validateCsrf, async (req, res, next) => {
+  try {
+    const db = getDb();
+    const { name, description, price, wholesale_price, category_id, featured, in_stock } = req.body;
+    const productId = req.params.id;
 
-  const existing = db.prepare('SELECT * FROM products WHERE id = ?').get(productId);
-  if (!existing) {
-    return res.redirect('/admin/products');
+    const existing = db.prepare('SELECT * FROM products WHERE id = ?').get(productId);
+    if (!existing) {
+      return res.redirect('/admin/products');
+    }
+
+    db.prepare(`
+      UPDATE products SET name = ?, description = ?, price = ?, wholesale_price = ?, category_id = ?, featured = ?, in_stock = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).run(name, description || '', parseFloat(price), wholesale_price ? parseFloat(wholesale_price) : null, parseInt(category_id, 10), featured ? 1 : 0, in_stock !== undefined ? (in_stock ? 1 : 0) : 1, productId);
+
+    // Save new images if uploaded
+    if (req.files && req.files.length > 0) {
+      const maxOrder = db.prepare('SELECT MAX(display_order) as max_order FROM product_images WHERE product_id = ?').get(productId);
+      const startOrder = (maxOrder?.max_order || 0) + 1;
+      const hasImages = db.prepare('SELECT COUNT(*) as count FROM product_images WHERE product_id = ?').get(productId);
+
+      const insertImage = db.prepare('INSERT INTO product_images (product_id, image_path, is_primary, display_order) VALUES (?, ?, ?, ?)');
+      let index = 0;
+      for (const file of req.files) {
+        const imagePath = await saveImage(file);
+        insertImage.run(productId, imagePath, hasImages.count === 0 && index === 0 ? 1 : 0, startOrder + index);
+        index++;
+      }
+    }
+
+    res.redirect('/admin/products');
+  } catch (err) {
+    next(err);
   }
-
-  db.prepare(`
-    UPDATE products SET name = ?, description = ?, price = ?, wholesale_price = ?, category_id = ?, featured = ?, in_stock = ?, updated_at = CURRENT_TIMESTAMP
-    WHERE id = ?
-  `).run(name, description || '', parseFloat(price), wholesale_price ? parseFloat(wholesale_price) : null, parseInt(category_id, 10), featured ? 1 : 0, in_stock !== undefined ? (in_stock ? 1 : 0) : 1, productId);
-
-  // Save new images if uploaded
-  if (req.files && req.files.length > 0) {
-    const maxOrder = db.prepare('SELECT MAX(display_order) as max_order FROM product_images WHERE product_id = ?').get(productId);
-    const startOrder = (maxOrder?.max_order || 0) + 1;
-    const hasImages = db.prepare('SELECT COUNT(*) as count FROM product_images WHERE product_id = ?').get(productId);
-
-    const insertImage = db.prepare('INSERT INTO product_images (product_id, image_path, is_primary, display_order) VALUES (?, ?, ?, ?)');
-    req.files.forEach((file, index) => {
-      insertImage.run(productId, '/uploads/' + file.filename, hasImages.count === 0 && index === 0 ? 1 : 0, startOrder + index);
-    });
-  }
-
-  res.redirect('/admin/products');
 });
 
 // Delete product
-router.post('/products/delete/:id', requireAdmin, validateCsrf, (req, res) => {
-  const db = getDb();
-  const images = db.prepare('SELECT image_path FROM product_images WHERE product_id = ?').all(req.params.id);
+router.post('/products/delete/:id', requireAdmin, validateCsrf, async (req, res, next) => {
+  try {
+    const db = getDb();
+    const images = db.prepare('SELECT image_path FROM product_images WHERE product_id = ?').all(req.params.id);
 
-  // Delete image files
-  for (const img of images) {
-    const filePath = path.join(UPLOADS_DIR, path.basename(img.image_path));
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
+    for (const img of images) {
+      await deleteImage(img.image_path);
     }
+
+    db.prepare('DELETE FROM product_images WHERE product_id = ?').run(req.params.id);
+    db.prepare('DELETE FROM products WHERE id = ?').run(req.params.id);
+
+    res.redirect('/admin/products');
+  } catch (err) {
+    next(err);
   }
-
-  db.prepare('DELETE FROM product_images WHERE product_id = ?').run(req.params.id);
-  db.prepare('DELETE FROM products WHERE id = ?').run(req.params.id);
-
-  res.redirect('/admin/products');
 });
 
 // Delete product image
-router.post('/products/delete-image/:imageId', requireAdmin, validateCsrf, (req, res) => {
-  const db = getDb();
-  const image = db.prepare('SELECT * FROM product_images WHERE id = ?').get(req.params.imageId);
+router.post('/products/delete-image/:imageId', requireAdmin, validateCsrf, async (req, res, next) => {
+  try {
+    const db = getDb();
+    const image = db.prepare('SELECT * FROM product_images WHERE id = ?').get(req.params.imageId);
 
-  if (image) {
-    const filePath = path.join(UPLOADS_DIR, path.basename(image.image_path));
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    }
+    if (image) {
+      await deleteImage(image.image_path);
 
-    db.prepare('DELETE FROM product_images WHERE id = ?').run(req.params.imageId);
+      db.prepare('DELETE FROM product_images WHERE id = ?').run(req.params.imageId);
 
-    // If this was the primary image, set another image as primary
-    if (image.is_primary) {
-      const nextImage = db.prepare('SELECT id FROM product_images WHERE product_id = ? ORDER BY display_order LIMIT 1').get(image.product_id);
-      if (nextImage) {
-        db.prepare('UPDATE product_images SET is_primary = 1 WHERE id = ?').run(nextImage.id);
+      // If this was the primary image, set another image as primary
+      if (image.is_primary) {
+        const nextImage = db.prepare('SELECT id FROM product_images WHERE product_id = ? ORDER BY display_order LIMIT 1').get(image.product_id);
+        if (nextImage) {
+          db.prepare('UPDATE product_images SET is_primary = 1 WHERE id = ?').run(nextImage.id);
+        }
       }
     }
-  }
 
-  res.json({ success: true });
+    res.json({ success: true });
+  } catch (err) {
+    next(err);
+  }
 });
 
 // Set primary image
