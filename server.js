@@ -1,5 +1,5 @@
 const express = require('express');
-const session = require('express-session');
+const cookieSession = require('cookie-session');
 const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
@@ -71,19 +71,25 @@ app.use(generalLimiter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Generate a random session secret if not provided
+// A random per-process fallback is fine for local dev, but on Vercel every
+// serverless instance would mint its own secret and invalidate every other
+// instance's cookies - session/CSRF/login would fail unpredictably. Require
+// a real SESSION_SECRET there instead of silently generating one.
+if (isProduction && !process.env.SESSION_SECRET) {
+  throw new Error('SESSION_SECRET environment variable must be set in production.');
+}
 const sessionSecret = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
 
-app.use(session({
-  secret: sessionSecret,
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: isProduction,
-    httpOnly: true,
-    sameSite: 'lax',
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
-  }
+// Sessions are stored entirely in a signed cookie (not server memory), so
+// they work correctly no matter which serverless instance handles a given
+// request - a plain express-session MemoryStore would not survive that.
+app.use(cookieSession({
+  name: 'session',
+  keys: [sessionSecret],
+  secure: isProduction,
+  httpOnly: true,
+  sameSite: 'lax',
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
 
 // CSRF protection: generate token per session and validate on state-changing requests
