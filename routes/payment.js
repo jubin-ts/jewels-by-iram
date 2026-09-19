@@ -1,20 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const { getDb } = require('../database/db');
+const { getPool } = require('../database/db');
 const { generateOrderPDF } = require('../utils/pdf');
 
 const ZIINA_API_URL = 'https://api-v2.ziina.com/api/payment_intent';
 
 // Create a payment intent and redirect to Ziina checkout
 router.post('/create', async (req, res) => {
-  const db = getDb();
+  const pool = getPool();
   const { orderId } = req.body;
 
   if (!orderId) {
     return res.status(400).json({ error: 'Order ID is required' });
   }
 
-  const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId);
+  const order = (await pool.query('SELECT * FROM orders WHERE id = $1', [orderId])).rows[0];
   if (!order) {
     return res.status(404).json({ error: 'Order not found' });
   }
@@ -53,8 +53,7 @@ router.post('/create', async (req, res) => {
     }
 
     // Store payment intent ID with the order
-    db.prepare('UPDATE orders SET payment_intent_id = ?, status = ? WHERE id = ?')
-      .run(data.id, 'payment_pending', order.id);
+    await pool.query('UPDATE orders SET payment_intent_id = $1, status = $2 WHERE id = $3', [data.id, 'payment_pending', order.id]);
 
     res.json({
       success: true,
@@ -68,33 +67,40 @@ router.post('/create', async (req, res) => {
 });
 
 // Payment success callback
-router.get('/success', (req, res) => {
-  const db = getDb();
-  const { order: orderNumber } = req.query;
+router.get('/success', async (req, res, next) => {
+  try {
+    const pool = getPool();
+    const { order: orderNumber } = req.query;
 
-  if (orderNumber) {
-    db.prepare('UPDATE orders SET status = ? WHERE order_number = ?')
-      .run('paid', orderNumber);
+    if (orderNumber) {
+      await pool.query('UPDATE orders SET status = $1 WHERE order_number = $2', ['paid', orderNumber]);
+    }
+
+    res.render('payment/success', {
+      title: 'Payment Successful',
+      orderNumber
+    });
+  } catch (err) {
+    next(err);
   }
-
-  res.render('payment/success', {
-    title: 'Payment Successful',
-    orderNumber
-  });
 });
 
 // Download invoice PDF (for customer after payment)
-router.get('/invoice/:orderNumber', (req, res) => {
-  const db = getDb();
-  const order = db.prepare('SELECT * FROM orders WHERE order_number = ?').get(req.params.orderNumber);
-  if (!order) {
-    return res.status(404).render('error', { title: 'Error', message: 'Order not found' });
-  }
-  const items = db.prepare('SELECT * FROM order_items WHERE order_id = ?').all(order.id);
+router.get('/invoice/:orderNumber', async (req, res, next) => {
+  try {
+    const pool = getPool();
+    const order = (await pool.query('SELECT * FROM orders WHERE order_number = $1', [req.params.orderNumber])).rows[0];
+    if (!order) {
+      return res.status(404).render('error', { title: 'Error', message: 'Order not found' });
+    }
+    const items = (await pool.query('SELECT * FROM order_items WHERE order_id = $1', [order.id])).rows;
 
-  res.setHeader('Content-Type', 'application/pdf');
-  res.setHeader('Content-Disposition', `attachment; filename=Invoice-${order.order_number}.pdf`);
-  generateOrderPDF(order, items, res);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename=Invoice-${order.order_number}.pdf`);
+    generateOrderPDF(order, items, res);
+  } catch (err) {
+    next(err);
+  }
 });
 
 // Payment cancel callback
@@ -108,19 +114,22 @@ router.get('/cancel', (req, res) => {
 });
 
 // Payment failure callback
-router.get('/failure', (req, res) => {
-  const db = getDb();
-  const { order: orderNumber } = req.query;
+router.get('/failure', async (req, res, next) => {
+  try {
+    const pool = getPool();
+    const { order: orderNumber } = req.query;
 
-  if (orderNumber) {
-    db.prepare('UPDATE orders SET status = ? WHERE order_number = ?')
-      .run('payment_failed', orderNumber);
+    if (orderNumber) {
+      await pool.query('UPDATE orders SET status = $1 WHERE order_number = $2', ['payment_failed', orderNumber]);
+    }
+
+    res.render('payment/failure', {
+      title: 'Payment Failed',
+      orderNumber
+    });
+  } catch (err) {
+    next(err);
   }
-
-  res.render('payment/failure', {
-    title: 'Payment Failed',
-    orderNumber
-  });
 });
 
 module.exports = router;

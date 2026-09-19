@@ -30,8 +30,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const isProduction = process.env.NODE_ENV === 'production';
 
-// Initialize database
-const db = initDatabase();
+// Kicked off immediately; requests wait for it via the middleware below
+// instead of blocking module load (Postgres connection setup is async).
+const dbReady = initDatabase();
 
 // View engine
 app.set('view engine', 'ejs');
@@ -70,6 +71,12 @@ app.use(generalLimiter);
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Hold requests until the database pool/schema is ready. Resolves instantly
+// on every request after the first one on a given instance.
+app.use((req, res, next) => {
+  dbReady.then(() => next(), next);
+});
 
 // A random per-process fallback is fine for local dev, but on Vercel every
 // serverless instance would mint its own secret and invalidate every other
