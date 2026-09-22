@@ -59,6 +59,10 @@ function renderCart(cart) {
   var cartTotal = document.getElementById('cartTotal');
   if (cartSubtotal) cartSubtotal.textContent = 'AED ' + total.toFixed(2);
   if (cartTotal) cartTotal.textContent = 'AED ' + total.toFixed(2);
+
+  var deliveryLabel = document.getElementById('cartDeliveryLabel');
+  if (deliveryLabel) deliveryLabel.textContent = total >= FREE_DELIVERY_THRESHOLD ? 'FREE' : '—';
+  renderFreeDeliveryMessage('freeDeliveryMsg', total);
 }
 
 function updateCartItem(productId, quantity) {

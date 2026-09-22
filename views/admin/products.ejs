@@ -20,8 +20,8 @@
                   <th>Name</th>
                   <th>Category</th>
                   <th>Price (AED)</th>
-                  <th>Wholesale</th>
                   <th>Featured</th>
+                  <th>New Arrival</th>
                   <th>Stock</th>
                   <th>Actions</th>
                 </tr>
@@ -39,9 +39,23 @@
                     <td><strong><%= product.name %></strong></td>
                     <td><%= product.category_name %></td>
                     <td><%= product.price.toFixed(2) %></td>
-                    <td><%= product.wholesale_price ? product.wholesale_price.toFixed(2) : '-' %></td>
                     <td><%= product.featured ? '⭐' : '-' %></td>
-                    <td><span class="status-badge status-<%= product.in_stock ? 'completed' : 'pending' %>"><%= product.in_stock ? 'In Stock' : 'Out of Stock' %></span></td>
+                    <td>
+                      <form method="POST" action="/admin/products/toggle-new-arrival/<%= product.id %>" style="display:inline;">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <button type="submit" class="status-badge status-<%= product.new_arrival ? 'completed' : 'pending' %>" style="border:none;cursor:pointer;">
+                          <%= product.new_arrival ? 'Yes' : 'No' %>
+                        </button>
+                      </form>
+                    </td>
+                    <td>
+                      <form method="POST" action="/admin/products/toggle-stock/<%= product.id %>" style="display:inline;">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <button type="submit" class="status-badge status-<%= product.in_stock ? 'completed' : 'pending' %>" style="border:none;cursor:pointer;">
+                          <%= product.in_stock ? 'In Stock' : 'Out of Stock' %>
+                        </button>
+                      </form>
+                    </td>
                     <td class="actions-cell">
                       <a href="/admin/products/edit/<%= product.id %>" class="btn btn-sm btn-edit"><i class="fas fa-edit"></i></a>
                       <form method="POST" action="/admin/products/delete/<%= product.id %>" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this product?')">

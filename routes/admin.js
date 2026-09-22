@@ -146,15 +146,15 @@ router.get('/products/edit/:id', requireAdmin, async (req, res, next) => {
 router.post('/products/create', requireAdmin, upload.array('images', 10), validateCsrf, async (req, res, next) => {
   try {
     const pool = getPool();
-    const { name, description, price, wholesale_price, category_id, featured, in_stock } = req.body;
+    const { name, description, price, wholesale_price, category_id, featured, in_stock, new_arrival } = req.body;
 
     const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + Date.now().toString(36);
 
     const result = await pool.query(`
-      INSERT INTO products (name, slug, description, price, wholesale_price, category_id, featured, in_stock)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      INSERT INTO products (name, slug, description, price, wholesale_price, category_id, featured, in_stock, new_arrival)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
       RETURNING id
-    `, [name, slug, description || '', parseFloat(price), wholesale_price ? parseFloat(wholesale_price) : null, parseInt(category_id, 10), featured ? 1 : 0, in_stock !== undefined ? (in_stock ? 1 : 0) : 1]);
+    `, [name, slug, description || '', parseFloat(price), wholesale_price ? parseFloat(wholesale_price) : null, parseInt(category_id, 10), featured ? 1 : 0, in_stock !== undefined ? (in_stock ? 1 : 0) : 1, new_arrival ? 1 : 0]);
 
     const productId = result.rows[0].id;
 
@@ -181,7 +181,7 @@ router.post('/products/create', requireAdmin, upload.array('images', 10), valida
 router.post('/products/update/:id', requireAdmin, upload.array('images', 10), validateCsrf, async (req, res, next) => {
   try {
     const pool = getPool();
-    const { name, description, price, wholesale_price, category_id, featured, in_stock } = req.body;
+    const { name, description, price, wholesale_price, category_id, featured, in_stock, new_arrival } = req.body;
     const productId = req.params.id;
 
     const existing = (await pool.query('SELECT * FROM products WHERE id = $1', [productId])).rows[0];
@@ -190,9 +190,9 @@ router.post('/products/update/:id', requireAdmin, upload.array('images', 10), va
     }
 
     await pool.query(`
-      UPDATE products SET name = $1, description = $2, price = $3, wholesale_price = $4, category_id = $5, featured = $6, in_stock = $7, updated_at = NOW()
-      WHERE id = $8
-    `, [name, description || '', parseFloat(price), wholesale_price ? parseFloat(wholesale_price) : null, parseInt(category_id, 10), featured ? 1 : 0, in_stock !== undefined ? (in_stock ? 1 : 0) : 1, productId]);
+      UPDATE products SET name = $1, description = $2, price = $3, wholesale_price = $4, category_id = $5, featured = $6, in_stock = $7, new_arrival = $8, updated_at = NOW()
+      WHERE id = $9
+    `, [name, description || '', parseFloat(price), wholesale_price ? parseFloat(wholesale_price) : null, parseInt(category_id, 10), featured ? 1 : 0, in_stock !== undefined ? (in_stock ? 1 : 0) : 1, new_arrival ? 1 : 0, productId]);
 
     // Save new images if uploaded
     if (req.files && req.files.length > 0) {
@@ -274,6 +274,28 @@ router.post('/products/set-primary-image/:imageId', requireAdmin, validateCsrf, 
     }
 
     res.json({ success: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Toggle in-stock / out-of-stock
+router.post('/products/toggle-stock/:id', requireAdmin, validateCsrf, async (req, res, next) => {
+  try {
+    const pool = getPool();
+    await pool.query('UPDATE products SET in_stock = 1 - in_stock, updated_at = NOW() WHERE id = $1', [req.params.id]);
+    res.redirect('/admin/products');
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Toggle new arrival
+router.post('/products/toggle-new-arrival/:id', requireAdmin, validateCsrf, async (req, res, next) => {
+  try {
+    const pool = getPool();
+    await pool.query('UPDATE products SET new_arrival = 1 - new_arrival, updated_at = NOW() WHERE id = $1', [req.params.id]);
+    res.redirect('/admin/products');
   } catch (err) {
     next(err);
   }

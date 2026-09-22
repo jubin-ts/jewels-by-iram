@@ -33,6 +33,7 @@ async function createSchema(pool) {
       category_id INTEGER NOT NULL REFERENCES categories(id),
       featured INTEGER DEFAULT 0,
       in_stock INTEGER DEFAULT 1,
+      new_arrival INTEGER DEFAULT 0,
       created_at TIMESTAMPTZ DEFAULT NOW(),
       updated_at TIMESTAMPTZ DEFAULT NOW()
     );
@@ -78,6 +79,7 @@ async function createSchema(pool) {
     );
 
     ALTER TABLE orders ADD COLUMN IF NOT EXISTS payment_intent_id TEXT;
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS new_arrival INTEGER DEFAULT 0;
   `);
 
   const adminExists = (await pool.query('SELECT id FROM admin_users WHERE username = $1', ['admin'])).rows[0];
@@ -95,9 +97,11 @@ async function createSchema(pool) {
       { name: 'Necklaces', slug: 'necklaces', description: 'Exquisite anti-tarnish necklaces', display_order: 4 },
       { name: 'Anklets', slug: 'anklets', description: 'Graceful anti-tarnish anklets', display_order: 5 },
       { name: 'Nose Pins', slug: 'nose-pins', description: 'Delicate anti-tarnish nose pins', display_order: 6 },
-      { name: 'Waist Chains', slug: 'waist-chains', description: 'Luxurious anti-tarnish waist chains', display_order: 7 },
+      { name: 'Hip Chain', slug: 'hip-chain', description: 'Luxurious anti-tarnish hip chains', display_order: 7 },
       { name: 'Earrings', slug: 'earrings', description: 'Stunning anti-tarnish earrings', display_order: 8 },
-      { name: 'Gift Hampers', slug: 'gift-hampers', description: 'Curated luxury jewelry gift hampers', display_order: 9 }
+      { name: 'Gift Hampers', slug: 'gift-hampers', description: 'Curated luxury jewelry gift hampers', display_order: 9 },
+      { name: 'Kids Jewellery', slug: 'kids-jewellery', description: 'Playful anti-tarnish jewelry for kids', display_order: 10 },
+      { name: "Men's Jewellery", slug: 'mens-jewellery', description: 'Anti-tarnish jewelry crafted for men', display_order: 11 }
     ];
 
     for (const cat of categories) {
@@ -120,6 +124,20 @@ async function createSchema(pool) {
   const giftHampersExists = (await pool.query("SELECT id FROM categories WHERE slug = 'gift-hampers'")).rows[0];
   if (!giftHampersExists) {
     await pool.query("INSERT INTO categories (name, slug, description, display_order) VALUES ('Gift Hampers', 'gift-hampers', 'Curated luxury jewelry gift hampers', 9)");
+  }
+
+  // Migration: rename 'Waist Chains' to 'Hip Chain'
+  const waistChainsCategory = (await pool.query("SELECT id FROM categories WHERE slug = 'waist-chains'")).rows[0];
+  if (waistChainsCategory) {
+    await pool.query("UPDATE categories SET name = 'Hip Chain', slug = 'hip-chain', description = 'Luxurious anti-tarnish hip chains' WHERE slug = 'waist-chains'");
+  }
+  const kidsExists = (await pool.query("SELECT id FROM categories WHERE slug = 'kids-jewellery'")).rows[0];
+  if (!kidsExists) {
+    await pool.query("INSERT INTO categories (name, slug, description, display_order) VALUES ('Kids Jewellery', 'kids-jewellery', 'Playful anti-tarnish jewelry for kids', 10)");
+  }
+  const mensExists = (await pool.query("SELECT id FROM categories WHERE slug = 'mens-jewellery'")).rows[0];
+  if (!mensExists) {
+    await pool.query("INSERT INTO categories (name, slug, description, display_order) VALUES ('Men''s Jewellery', 'mens-jewellery', 'Anti-tarnish jewelry crafted for men', 11)");
   }
 }
 

@@ -149,3 +149,23 @@ function escapeHtml(text) {
   div.appendChild(document.createTextNode(text));
   return div.innerHTML;
 }
+
+// Free delivery threshold nudge, used on the cart and checkout pages
+var FREE_DELIVERY_THRESHOLD = 150;
+
+function renderFreeDeliveryMessage(elementId, total) {
+  var el = document.getElementById(elementId);
+  if (!el) return;
+
+  if (total <= 0) {
+    el.innerHTML = '';
+    return;
+  }
+
+  var remaining = FREE_DELIVERY_THRESHOLD - total;
+  if (remaining > 0) {
+    el.innerHTML = '<i class="fas fa-truck"></i> Add AED ' + remaining.toFixed(2) + ' more for free delivery';
+  } else {
+    el.innerHTML = '<i class="fas fa-truck"></i> You\'ve qualified for free delivery!';
+  }
+}

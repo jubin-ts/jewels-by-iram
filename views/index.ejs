@@ -15,7 +15,7 @@
       <p class="hero-subtitle">Luxury Anti-Tarnish Jewelry • Handcrafted with Love</p>
       <div class="hero-buttons">
         <a href="/shop" class="btn btn-gold">View Collections</a>
-        <a href="https://wa.me/971567241398?text=Hi%2C%20I%27m%20interested%20in%20your%20jewelry%20collection!" class="btn btn-outline" target="_blank" rel="noopener noreferrer">
+        <a href="https://wa.me/971569713569?text=Hi%2C%20I%27m%20interested%20in%20your%20jewelry%20collection!" class="btn btn-outline" target="_blank" rel="noopener noreferrer">
           <i class="fab fa-whatsapp"></i> Chat With Us
         </a>
       </div>
@@ -23,34 +23,6 @@
     <div class="hero-scroll-indicator">
       <span>Scroll</span>
       <div class="scroll-line"></div>
-    </div>
-  </section>
-
-  <!-- Features -->
-  <section class="features">
-    <div class="container">
-      <div class="features-grid">
-        <div class="feature-card reveal-up">
-          <i class="fas fa-gem"></i>
-          <h3>Anti-Tarnish</h3>
-          <p>Premium quality jewelry that maintains its shine and beauty over time</p>
-        </div>
-        <div class="feature-card reveal-up">
-          <i class="fas fa-shipping-fast"></i>
-          <h3>UAE Delivery</h3>
-          <p>Fast and reliable delivery to all locations across the UAE</p>
-        </div>
-        <div class="feature-card reveal-up">
-          <i class="fas fa-store"></i>
-          <h3>Retail & Wholesale</h3>
-          <p>Available for individual purchase and bulk wholesale orders</p>
-        </div>
-        <div class="feature-card reveal-up">
-          <i class="fas fa-certificate"></i>
-          <h3>Quality Assured</h3>
-          <p>Every piece is crafted with attention to detail and quality materials</p>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -76,7 +48,7 @@
         <p class="section-desc">Explore our diverse range of luxury anti-tarnish jewelry</p>
       </div>
       <div class="categories-grid">
-        <% const categoryIcons = { 'bracelets': 'fa-link', 'bangles': 'fa-circle-notch', 'rings': 'fa-ring', 'necklaces': 'fa-link', 'earrings': 'fa-ear-listen', 'anklets': 'fa-shoe-prints', 'nose-pins': 'fa-gem', 'waist-chains': 'fa-infinity', 'gift-hampers': 'fa-gift' }; %>
+        <% const categoryIcons = { 'bracelets': 'fa-link', 'bangles': 'fa-circle-notch', 'rings': 'fa-ring', 'necklaces': 'fa-link', 'earrings': 'fa-ear-listen', 'anklets': 'fa-shoe-prints', 'nose-pins': 'fa-gem', 'hip-chain': 'fa-infinity', 'gift-hampers': 'fa-gift', 'kids-jewellery': 'fa-child', 'mens-jewellery': 'fa-mars' }; %>
         <% categories.forEach(function(cat) { %>
           <a href="/shop?category=<%= cat.slug %>" class="category-card reveal-up">
             <div class="category-icon">
@@ -87,6 +59,29 @@
             <span class="category-link">Explore <i class="fas fa-arrow-right"></i></span>
           </a>
         <% }); %>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features">
+    <div class="container">
+      <div class="features-grid">
+        <div class="feature-card reveal-up">
+          <i class="fas fa-gem"></i>
+          <h3>Anti-Tarnish</h3>
+          <p>Premium quality jewelry that maintains its shine and beauty over time</p>
+        </div>
+        <div class="feature-card reveal-up">
+          <i class="fas fa-shipping-fast"></i>
+          <h3>UAE Delivery</h3>
+          <p>All over UAE delivery available</p>
+        </div>
+        <div class="feature-card reveal-up">
+          <i class="fas fa-certificate"></i>
+          <h3>Quality Assured</h3>
+          <p>Every piece is crafted with attention to detail and quality materials</p>
+        </div>
       </div>
     </div>
   </section>
@@ -129,77 +124,40 @@
   </section>
   <% } %>
 
-  <!-- Lookbook Section -->
-  <section class="lookbook section" id="lookbook">
+  <!-- New Arrivals Section -->
+  <% if (newArrivals.length > 0) { %>
+  <section class="section new-arrivals-section" id="new-arrivals">
     <div class="container">
       <div class="section-header reveal-up">
-        <span class="section-label">STYLE INSPIRATION</span>
-        <h2 class="section-title">The Lookbook</h2>
+        <span class="section-label">JUST IN</span>
+        <h2 class="section-title">New Arrival's</h2>
         <div class="gold-divider centered"></div>
-        <p class="section-desc">See our jewelry come alive — styled, worn, and celebrated.</p>
+        <p class="section-desc">The latest pieces to join our collection.</p>
       </div>
-      <div class="lookbook-grid">
-        <div class="lookbook-item lookbook-large reveal-up">
-          <img src="/images/lookbook/model-1.jpeg" alt="Model wearing Jewels by Iram jewelry" loading="lazy">
-          <div class="lookbook-overlay"><span class="lookbook-tag">Editorial</span></div>
-        </div>
-        <div class="lookbook-item reveal-up">
-          <img src="/images/lookbook/model-2.jpeg" alt="Model showcasing necklace" loading="lazy">
-          <div class="lookbook-overlay"><span class="lookbook-tag">Bridal</span></div>
-        </div>
-        <div class="lookbook-item reveal-up">
-          <img src="/images/lookbook/model-3.jpeg" alt="Model with earrings" loading="lazy">
-          <div class="lookbook-overlay"><span class="lookbook-tag">Occasion</span></div>
-        </div>
-        <div class="lookbook-item reveal-up">
-          <img src="/images/lookbook/model-4.jpeg" alt="Styled jewelry look" loading="lazy">
-          <div class="lookbook-overlay"><span class="lookbook-tag">Classic</span></div>
-        </div>
-        <div class="lookbook-item lookbook-large reveal-up">
-          <img src="/images/lookbook/model-5.jpeg" alt="Model in designer jewelry" loading="lazy">
-          <div class="lookbook-overlay"><span class="lookbook-tag">Couture</span></div>
-        </div>
-        <div class="lookbook-item reveal-up">
-          <img src="/images/lookbook/model-6.jpeg" alt="Jewelry styling" loading="lazy">
-          <div class="lookbook-overlay"><span class="lookbook-tag">Festive</span></div>
-        </div>
-        <div class="lookbook-item reveal-up">
-          <img src="/images/lookbook/model-7.jpeg" alt="Elegant jewelry look" loading="lazy">
-          <div class="lookbook-overlay"><span class="lookbook-tag">Modern</span></div>
-        </div>
-        <div class="lookbook-item reveal-up">
-          <img src="/images/lookbook/model-8.jpeg" alt="Statement jewelry styling" loading="lazy">
-          <div class="lookbook-overlay"><span class="lookbook-tag">Statement</span></div>
-        </div>
-        <div class="lookbook-item lookbook-large reveal-up">
-          <img src="/images/lookbook/model-9.jpeg" alt="Bridal jewelry look" loading="lazy">
-          <div class="lookbook-overlay"><span class="lookbook-tag">Bridal</span></div>
-        </div>
-        <div class="lookbook-item reveal-up">
-          <img src="/images/lookbook/model-10.jpeg" alt="Contemporary jewelry styling" loading="lazy">
-          <div class="lookbook-overlay"><span class="lookbook-tag">Contemporary</span></div>
-        </div>
+      <div class="products-grid">
+        <% newArrivals.forEach(function(product) { %>
+          <div class="product-card reveal-up">
+            <a href="/product/<%= product.slug %>" class="product-image">
+              <% if (product.primary_image) { %>
+                <img src="<%= product.primary_image %>" alt="<%= product.name %>" loading="lazy">
+              <% } else { %>
+                <div class="product-placeholder"><i class="fas fa-gem"></i></div>
+              <% } %>
+            </a>
+            <div class="product-info">
+              <span class="product-category"><%= product.category_name %></span>
+              <h3><a href="/product/<%= product.slug %>"><%= product.name %></a></h3>
+              <div class="product-price">AED <%= product.price.toFixed(2) %></div>
+              <button class="btn btn-add-cart" onclick="addToCart(<%= product.id %>)">
+                <i class="fas fa-shopping-bag"></i> Add to Cart
+              </button>
+            </div>
+          </div>
+        <% }); %>
       </div>
     </div>
   </section>
-
-  <!-- CTA Section -->
-  <section class="cta-section reveal-up">
-    <div class="container">
-      <div class="cta-content">
-        <h2>Looking for Wholesale?</h2>
-        <p>We offer premium anti-tarnish jewelry at competitive wholesale prices. Contact us for bulk orders and special pricing.</p>
-        <div class="cta-buttons">
-          <a href="https://wa.me/971567241398?text=Hi%2C%20I%27m%20interested%20in%20wholesale%20pricing!" class="btn btn-gold" target="_blank" rel="noopener noreferrer">
-            <i class="fab fa-whatsapp"></i> WhatsApp Us
-          </a>
-          <a href="tel:+971567241398" class="btn btn-outline">
-            <i class="fas fa-phone"></i> Call Now
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
+  <% } %>
 
   <!-- Instagram CTA -->
   <section class="section instagram-section reveal-up">

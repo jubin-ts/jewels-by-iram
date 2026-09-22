@@ -32,6 +32,7 @@ function loadCheckoutSummary() {
 
       if (checkoutItems) checkoutItems.innerHTML = html;
       if (checkoutTotal) checkoutTotal.textContent = 'AED ' + total.toFixed(2);
+      renderFreeDeliveryMessage('freeDeliveryMsg', total);
     });
 }
 

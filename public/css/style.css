@@ -1234,6 +1234,18 @@ cite {
   font-size: 14px;
   border-bottom: 1px solid rgba(0,0,0,0.05);
 }
+.free-delivery-msg {
+  font-size: 13px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  background: rgba(201, 169, 110, 0.12);
+  border: 1px solid rgba(201, 169, 110, 0.35);
+  border-radius: var(--radius-sm, 6px);
+  color: var(--gold);
+}
+.free-delivery-msg:empty {
+  display: none;
+}
 .summary-total {
   font-size: 18px;
   font-weight: 600;

@@ -34,13 +34,6 @@
           <h1><%= product.name %></h1>
           <div class="product-price-large">AED <%= product.price.toFixed(2) %></div>
 
-          <% if (product.wholesale_price) { %>
-            <div class="wholesale-price">
-              <i class="fas fa-tag"></i> Wholesale Price: AED <%= product.wholesale_price.toFixed(2) %>
-              <small>(Contact for bulk orders)</small>
-            </div>
-          <% } %>
-
           <div class="product-desc">
             <p><%= product.description || 'A beautifully crafted piece from our luxury anti-tarnish jewelry collection.' %></p>
           </div>
@@ -48,7 +41,7 @@
           <div class="product-features">
             <div class="feature-item"><i class="fas fa-check-circle"></i> Anti-Tarnish Quality</div>
             <div class="feature-item"><i class="fas fa-check-circle"></i> Premium Materials</div>
-            <div class="feature-item"><i class="fas fa-check-circle"></i> Free UAE Delivery</div>
+            <div class="feature-item"><i class="fas fa-check-circle"></i> All Over UAE Delivery Available</div>
           </div>
 
           <div class="product-actions">
@@ -63,10 +56,10 @@
           </div>
 
           <div class="product-contact">
-            <a href="https://wa.me/971567241398?text=Hi%2C%20I%27m%20interested%20in%20<%= encodeURIComponent(product.name) %>" class="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
+            <a href="https://wa.me/971569713569?text=Hi%2C%20I%27m%20interested%20in%20<%= encodeURIComponent(product.name) %>" class="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
               <i class="fab fa-whatsapp"></i> Order via WhatsApp
             </a>
-            <a href="tel:+971567241398" class="btn btn-outline">
+            <a href="tel:+971569713569" class="btn btn-outline">
               <i class="fas fa-phone"></i> Call to Order
             </a>
           </div>

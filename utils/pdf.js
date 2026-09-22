@@ -18,7 +18,7 @@ function generateOrderPDF(order, items, stream) {
     .text('Jewels by Iram', hasLogo ? 120 : 50, 50);
   doc.fontSize(10).font('Helvetica')
     .text('Luxury Anti-Tarnish Jewelry', hasLogo ? 120 : 50, 75)
-    .text('UAE | +971 56 724 1398 | info@jewelsbyiram.ae', hasLogo ? 120 : 50, 90);
+    .text('UAE | +971 56 971 3569 | info@jewelsbyiram.ae', hasLogo ? 120 : 50, 90);
 
   // Invoice title
   doc.moveDown(2);

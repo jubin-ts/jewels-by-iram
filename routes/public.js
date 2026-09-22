@@ -16,11 +16,21 @@ router.get('/', async (req, res, next) => {
       ORDER BY p.created_at DESC
       LIMIT 8
     `)).rows;
+    const newArrivals = (await pool.query(`
+      SELECT p.*, c.name as category_name, c.slug as category_slug,
+      (SELECT image_path FROM product_images WHERE product_id = p.id AND is_primary = 1 LIMIT 1) as primary_image
+      FROM products p
+      JOIN categories c ON p.category_id = c.id
+      WHERE p.new_arrival = 1 AND p.in_stock = 1
+      ORDER BY p.created_at DESC
+      LIMIT 10
+    `)).rows;
 
     res.render('index', {
       title: 'Jewels by Iram - Luxury Anti-Tarnish Jewelry',
       categories,
-      featuredProducts
+      featuredProducts,
+      newArrivals
     });
   } catch (err) {
     next(err);

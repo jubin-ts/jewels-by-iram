@@ -14,15 +14,9 @@
                   <label for="description">Description</label>
                   <textarea id="description" name="description" rows="4" placeholder="Describe this product..."><%= product ? product.description : '' %></textarea>
                 </div>
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="price">Retail Price (AED) *</label>
-                    <input type="number" id="price" name="price" step="0.01" min="0" required value="<%= product ? product.price : '' %>" placeholder="0.00">
-                  </div>
-                  <div class="form-group">
-                    <label for="wholesale_price">Wholesale Price (AED)</label>
-                    <input type="number" id="wholesale_price" name="wholesale_price" step="0.01" min="0" value="<%= product && product.wholesale_price ? product.wholesale_price : '' %>" placeholder="0.00">
-                  </div>
+                <div class="form-group">
+                  <label for="price">Retail Price (AED) *</label>
+                  <input type="number" id="price" name="price" step="0.01" min="0" required value="<%= product ? product.price : '' %>" placeholder="0.00">
                 </div>
               </div>
 
@@ -75,6 +69,12 @@
                   <label>
                     <input type="checkbox" name="in_stock" value="1" <%= (!product || product.in_stock) ? 'checked' : '' %>>
                     In Stock
+                  </label>
+                </div>
+                <div class="form-group checkbox-group">
+                  <label>
+                    <input type="checkbox" name="new_arrival" value="1" <%= product && product.new_arrival ? 'checked' : '' %>>
+                    New Arrival
                   </label>
                 </div>
               </div>

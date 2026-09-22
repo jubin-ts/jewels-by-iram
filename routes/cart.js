@@ -145,7 +145,7 @@ router.post('/checkout', async (req, res, next) => {
     whatsappMsg += `\n*Total: AED ${totalAmount.toFixed(2)}*`;
     if (notes) whatsappMsg += `\n\n*Notes:* ${notes}`;
 
-    const whatsappUrl = `https://wa.me/971567241398?text=${encodeURIComponent(whatsappMsg)}`;
+    const whatsappUrl = `https://wa.me/971569713569?text=${encodeURIComponent(whatsappMsg)}`;
 
     // Clear cart
     req.session.cart = [];
