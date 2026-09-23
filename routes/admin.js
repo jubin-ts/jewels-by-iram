@@ -5,7 +5,9 @@ const bcrypt = require('bcryptjs');
 const { getPool } = require('../database/db');
 const { requireAdmin } = require('../middleware/auth');
 const { generateOrderPDF } = require('../utils/pdf');
-const { saveImage, deleteImage } = require('../utils/imageStore');
+const { saveImage, deleteImage, reoptimizeExistingImage } = require('../utils/imageStore');
+
+const OPTIMIZE_BATCH_SIZE = 5;
 
 // CSRF validation middleware
 function validateCsrf(req, res, next) {
@@ -35,7 +37,7 @@ const fileFilter = (_req, file, cb) => {
 const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB
+  limits: { fileSize: 20 * 1024 * 1024 } // 20MB - images are resized/compressed on the way in (see imageStore.js), so this just needs to comfortably fit any phone camera photo
 });
 
 // Admin login page
@@ -164,7 +166,7 @@ router.post('/products/create', requireAdmin, upload.array('images', 10), valida
       for (const file of req.files) {
         const imagePath = await saveImage(file);
         await pool.query(
-          'INSERT INTO product_images (product_id, image_path, is_primary, display_order) VALUES ($1, $2, $3, $4)',
+          'INSERT INTO product_images (product_id, image_path, is_primary, display_order, optimized) VALUES ($1, $2, $3, $4, 1)',
           [productId, imagePath, index === 0 ? 1 : 0, index]
         );
         index++;
@@ -204,7 +206,7 @@ router.post('/products/update/:id', requireAdmin, upload.array('images', 10), va
       for (const file of req.files) {
         const imagePath = await saveImage(file);
         await pool.query(
-          'INSERT INTO product_images (product_id, image_path, is_primary, display_order) VALUES ($1, $2, $3, $4)',
+          'INSERT INTO product_images (product_id, image_path, is_primary, display_order, optimized) VALUES ($1, $2, $3, $4, 1)',
           [productId, imagePath, parseInt(hasImages.count, 10) === 0 && index === 0 ? 1 : 0, startOrder + index]
         );
         index++;
@@ -296,6 +298,56 @@ router.post('/products/toggle-new-arrival/:id', requireAdmin, validateCsrf, asyn
     const pool = getPool();
     await pool.query('UPDATE products SET new_arrival = 1 - new_arrival, updated_at = NOW() WHERE id = $1', [req.params.id]);
     res.redirect('/admin/products');
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Optimize images - one-time cleanup for photos uploaded before saveImage()
+// started resizing/compressing on the way in (see utils/imageStore.js)
+router.get('/optimize-images', requireAdmin, async (req, res, next) => {
+  try {
+    const pool = getPool();
+    const remaining = parseInt(
+      (await pool.query('SELECT COUNT(*) as count FROM product_images WHERE optimized = 0')).rows[0].count,
+      10
+    );
+    const processed = req.query.processed !== undefined ? parseInt(req.query.processed, 10) : null;
+    const errors = req.query.errors !== undefined ? parseInt(req.query.errors, 10) : 0;
+    res.render('admin/optimize-images', {
+      title: 'Optimize Images',
+      remaining,
+      processed,
+      errors,
+      batchSize: OPTIMIZE_BATCH_SIZE
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/optimize-images/run', requireAdmin, validateCsrf, async (req, res, next) => {
+  try {
+    const pool = getPool();
+    const batch = (await pool.query(
+      'SELECT id, image_path FROM product_images WHERE optimized = 0 ORDER BY id LIMIT $1',
+      [OPTIMIZE_BATCH_SIZE]
+    )).rows;
+
+    let processed = 0;
+    let errors = 0;
+    for (const image of batch) {
+      try {
+        const newPath = await reoptimizeExistingImage(image.image_path);
+        await pool.query('UPDATE product_images SET image_path = $1, optimized = 1 WHERE id = $2', [newPath, image.id]);
+        processed++;
+      } catch (err) {
+        console.error('Failed to optimize image', image.id, err);
+        errors++;
+      }
+    }
+
+    res.redirect(`/admin/optimize-images?processed=${processed}&errors=${errors}`);
   } catch (err) {
     next(err);
   }

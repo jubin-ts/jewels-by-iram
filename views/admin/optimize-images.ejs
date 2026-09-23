@@ -1,0 +1,25 @@
+<%- include('partials/admin-header') %>
+
+        <div class="form-card">
+          <h3>Optimize Product Images</h3>
+          <p>Images uploaded before this feature was added are still stored at their original camera size (often 2-8MB). This re-processes them in small batches to load fast, the same way new uploads already do.</p>
+
+          <% if (typeof processed !== 'undefined' && processed !== null) { %>
+            <p>
+              <strong>Last batch:</strong> optimized <%= processed %> image<%= processed === 1 ? '' : 's' %>.
+              <% if (errors > 0) { %>&nbsp;<%= errors %> failed and will be retried in the next batch.<% } %>
+            </p>
+          <% } %>
+
+          <% if (remaining === 0) { %>
+            <p><i class="fas fa-check-circle"></i> All product images are optimized.</p>
+          <% } else { %>
+            <p><%= remaining %> image<%= remaining === 1 ? '' : 's' %> still need optimizing.</p>
+            <form method="POST" action="/admin/optimize-images/run">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <button type="submit" class="btn btn-primary">Optimize Next Batch (up to <%= batchSize %>)</button>
+            </form>
+          <% } %>
+        </div>
+
+<%- include('partials/admin-footer') %>

@@ -43,7 +43,8 @@ async function createSchema(pool) {
       product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
       image_path TEXT NOT NULL,
       is_primary INTEGER DEFAULT 0,
-      display_order INTEGER DEFAULT 0
+      display_order INTEGER DEFAULT 0,
+      optimized INTEGER DEFAULT 0
     );
 
     CREATE TABLE IF NOT EXISTS orders (
@@ -80,6 +81,7 @@ async function createSchema(pool) {
 
     ALTER TABLE orders ADD COLUMN IF NOT EXISTS payment_intent_id TEXT;
     ALTER TABLE products ADD COLUMN IF NOT EXISTS new_arrival INTEGER DEFAULT 0;
+    ALTER TABLE product_images ADD COLUMN IF NOT EXISTS optimized INTEGER DEFAULT 0;
   `);
 
   // Every cold start re-runs this function (see initDatabase below), so once
