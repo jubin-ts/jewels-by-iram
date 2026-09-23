@@ -147,7 +147,6 @@
             <div class="product-info">
               <span class="product-category"><%= product.category_name %></span>
               <h3><a href="/product/<%= product.slug %>"><%= product.name %></a></h3>
-              <div class="product-price">AED <%= product.price.toFixed(2) %></div>
               <button class="btn btn-add-cart" onclick="addToCart(<%= product.id %>)">
                 <i class="fas fa-shopping-bag"></i> Add to Cart
               </button>

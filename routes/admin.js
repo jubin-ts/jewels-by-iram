@@ -154,7 +154,7 @@ router.post('/products/create', requireAdmin, upload.array('images', 10), valida
       INSERT INTO products (name, slug, description, price, wholesale_price, category_id, featured, in_stock, new_arrival)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
       RETURNING id
-    `, [name, slug, description || '', parseFloat(price), wholesale_price ? parseFloat(wholesale_price) : null, parseInt(category_id, 10), featured ? 1 : 0, in_stock !== undefined ? (in_stock ? 1 : 0) : 1, new_arrival ? 1 : 0]);
+    `, [name, slug, description || '', parseFloat(price), wholesale_price ? parseFloat(wholesale_price) : null, parseInt(category_id, 10), featured ? 1 : 0, in_stock === '0' ? 0 : 1, new_arrival ? 1 : 0]);
 
     const productId = result.rows[0].id;
 
@@ -192,7 +192,7 @@ router.post('/products/update/:id', requireAdmin, upload.array('images', 10), va
     await pool.query(`
       UPDATE products SET name = $1, description = $2, price = $3, wholesale_price = $4, category_id = $5, featured = $6, in_stock = $7, new_arrival = $8, updated_at = NOW()
       WHERE id = $9
-    `, [name, description || '', parseFloat(price), wholesale_price ? parseFloat(wholesale_price) : null, parseInt(category_id, 10), featured ? 1 : 0, in_stock !== undefined ? (in_stock ? 1 : 0) : 1, new_arrival ? 1 : 0, productId]);
+    `, [name, description || '', parseFloat(price), wholesale_price ? parseFloat(wholesale_price) : null, parseInt(category_id, 10), featured ? 1 : 0, in_stock === '0' ? 0 : 1, new_arrival ? 1 : 0, productId]);
 
     // Save new images if uploaded
     if (req.files && req.files.length > 0) {

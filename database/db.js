@@ -82,11 +82,22 @@ async function createSchema(pool) {
     ALTER TABLE products ADD COLUMN IF NOT EXISTS new_arrival INTEGER DEFAULT 0;
   `);
 
-  const adminExists = (await pool.query('SELECT id FROM admin_users WHERE username = $1', ['admin'])).rows[0];
-  if (!adminExists) {
-    const hashedPassword = bcrypt.hashSync('admin123', 10);
-    await pool.query('INSERT INTO admin_users (username, password) VALUES ($1, $2)', ['admin', hashedPassword]);
+  // Every cold start re-runs this function (see initDatabase below), so once
+  // the categories below have converged, skip straight past the rest with a
+  // single query instead of a dozen sequential round trips on every request
+  // that happens to land on a fresh serverless instance.
+  const migrated = (await pool.query(
+    "SELECT COUNT(*) as count FROM categories WHERE slug IN ('hip-chain', 'kids-jewellery', 'mens-jewellery')"
+  )).rows[0];
+
+  if (parseInt(migrated.count, 10) === 3) {
+    return;
   }
+
+  await pool.query(
+    `INSERT INTO admin_users (username, password) VALUES ($1, $2) ON CONFLICT (username) DO NOTHING`,
+    ['admin', bcrypt.hashSync('admin123', 10)]
+  );
 
   const categoryCount = (await pool.query('SELECT COUNT(*) as count FROM categories')).rows[0];
   if (parseInt(categoryCount.count, 10) === 0) {
